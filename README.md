@@ -150,7 +150,9 @@ Git & GitHub
 
 ## Basic Working Flow
 The server starts first.
+
 The agent program runs and tries to connect to the server.
+
 A communication channel is created.
 Encryption is applied to secure messages.
 The agent sends basic information to the server.
