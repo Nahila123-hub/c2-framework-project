@@ -66,6 +66,7 @@ c2-framework-project
 
 ## Team Members
 Name	                            Role
+
 Nahila Mazgaonkar	Team Lead / Documentation / Coordination
 
 Gayatri Gode	               C2 Server Developer
