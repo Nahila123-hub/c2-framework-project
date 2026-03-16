@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C2 Control Center</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Top Header -->
+    <header class="header">
+        <div class="header-left">
+            <div class="logo">
+                <span class="logo-icon">◈</span>
+                <h1>C2 CONTROL CENTER</h1>
+            </div>
+        </div>
+        <div class="header-center">
+            <div class="status-badge">
+                <span class="status-pulse"></span>
+                <span class="status-text">ONLINE / SECURE</span>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="clock" id="liveClock">00:00:00</div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- Left Sidebar -->
+        <aside class="sidebar">
+            <nav class="nav-menu">
+                <ul>
+                    <li class="nav-item active" data-page="dashboard">
+                        <span class="nav-icon">▣</span>
+                        <span class="nav-text">Dashboard</span>
+                    </li>
+                    <li class="nav-item" data-page="agents">
+                        <span class="nav-icon">◉</span>
+                        <span class="nav-text">Agents</span>
+                    </li>
+                    <li class="nav-item" data-page="commands">
+                        <span class="nav-icon">▶</span>
+                        <span class="nav-text">Commands</span>
+                    </li>
+                    <li class="nav-item" data-page="logs">
+                        <span class="nav-icon">≡</span>
+                        <span class="nav-text">Logs</span>
+                    </li>
+                    <li class="nav-item" data-page="settings">
+                        <span class="nav-icon">⚙</span>
+                        <span class="nav-text">Settings</span>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Dashboard Area -->
+        <main class="dashboard">
+            <!-- Agent Overview Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">◉</div>
+                    <div class="stat-content">
+                        <div class="stat-value" id="totalAgents">0</div>
+                        <div class="stat-label">Total Agents</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon active-icon">●</div>
+                    <div class="stat-content">
+                        <div class="stat-value" id="activeAgents">0</div>
+                        <div class="stat-label">Active Agents</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">▶</div>
+                    <div class="stat-content">
+                        <div class="stat-value" id="commandsExecuted">0</div>
+                        <div class="stat-label">Commands Executed</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⚠</div>
+                    <div class="stat-content">
+                        <div class="stat-value" id="alerts">0</div>
+                        <div class="stat-label">Alerts</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Connected Agents Table -->
+            <div class="panel">
+                <div class="panel-header">
+                    <h2>CONNECTED AGENTS</h2>
+                    <button class="btn-refresh" id="refreshBtn">
+                        <span>↻</span> REFRESH
+                    </button>
+                </div>
+                <div class="table-wrapper">
+                    <table class="agents-table">
+                        <thead>
+                            <tr>
+                                <th>AGENT ID</th>
+                                <th>HOSTNAME</th>
+                                <th>USERNAME</th>
+                                <th>OPERATING SYSTEM</th>
+                                <th>STATUS</th>
+                            </tr>
+                        </thead>
+                        <tbody id="agentsTableBody">
+                            <tr>
+                                <td colspan="5" class="loading-cell">
+                                    <div class="loading-spinner"></div>
+                                    <span>Loading agents...</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Global Agent Map -->
+            <div class="panel">
+                <div class="panel-header">
+                    <h2>GLOBAL AGENT MAP</h2>
+                </div>
+                <div class="map-container">
+                    <div class="map-grid">
+                        <div class="map-dot" style="top: 35%; left: 25%;"></div>
+                        <div class="map-dot" style="top: 45%; left: 75%;"></div>
+                        <div class="map-dot" style="top: 60%; left: 50%;"></div>
+                        <div class="map-dot" style="top: 25%; left: 60%;"></div>
+                    </div>
+                    <div class="map-overlay">
+                        <svg viewBox="0 0 1000 500" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M 0,250 Q 250,200 500,250 T 1000,250" stroke="#00ff9c" stroke-width="0.5" fill="none" opacity="0.2"/>
+                            <path d="M 0,300 Q 250,250 500,300 T 1000,300" stroke="#00ff9c" stroke-width="0.5" fill="none" opacity="0.2"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Command Console -->
+            <div class="panel">
+                <div class="panel-header">
+                    <h2>COMMAND CONSOLE</h2>
+                </div>
+                <div class="command-input-wrapper">
+                    <span class="command-prompt">root@c2:~$</span>
+                    <input type="text" class="command-input" id="commandInput" placeholder="Enter command..." autocomplete="off">
+                    <button class="btn-send" id="sendBtn">SEND</button>
+                </div>
+            </div>
+
+            <!-- Terminal Output -->
+            <div class="panel terminal-panel">
+                <div class="panel-header">
+                    <h2>TERMINAL OUTPUT</h2>
+                    <button class="btn-clear" id="clearBtn">CLEAR</button>
+                </div>
+                <div class="terminal" id="terminal">
+                    <div class="terminal-line">[SYSTEM] C2 Control Center initialized...</div>
+                    <div class="terminal-line">[SYSTEM] Establishing secure connection...</div>
+                    <div class="terminal-line">[SYSTEM] Ready to receive commands...</div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
