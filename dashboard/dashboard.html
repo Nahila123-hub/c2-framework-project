@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C2 Framework — Command Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-primary: #0a0e17;
+            --bg-secondary: #111827;
+            --bg-card: #1a2332;
+            --bg-card-hover: #1f2b3d;
+            --border: #2a3a4e;
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent-green: #00ff88;
+            --accent-cyan: #00d4ff;
+            --accent-red: #ff4757;
+            --accent-orange: #ff8c42;
+            --accent-purple: #a855f7;
+            --gradient-green: linear-gradient(135deg, #00ff88, #00d4ff);
+            --gradient-red: linear-gradient(135deg, #ff4757, #ff6b81);
+            --gradient-purple: linear-gradient(135deg, #a855f7, #6366f1);
+            --gradient-orange: linear-gradient(135deg, #ff8c42, #f59e0b);
+            --glow-green: 0 0 20px rgba(0, 255, 136, 0.15);
+            --glow-cyan: 0 0 20px rgba(0, 212, 255, 0.15);
+            --font-mono: 'JetBrains Mono', monospace;
+            --font-sans: 'Inter', sans-serif;
+        }
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background:
+                radial-gradient(ellipse at 20% 50%, rgba(0, 255, 136, 0.03) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(0, 212, 255, 0.03) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 80%, rgba(168, 85, 247, 0.02) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .logo {
+            width: 40px; height: 40px;
+            background: var(--gradient-green);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--bg-primary);
+            box-shadow: var(--glow-green);
+        }
+        .header-title {
+            font-family: var(--font-mono);
+            font-size: 20px;
+            font-weight: 700;
+            background: var(--gradient-green);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .header-subtitle {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+        }
+        .server-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: rgba(0, 255, 136, 0.08);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            font-family: var(--font-mono);
+            font-size: 13px;
+            color: var(--accent-green);
+        }
+        .status-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--accent-green);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(0,255,136,0.4); }
+            50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(0,255,136,0); }
+        }
+
+        /* Main Layout */
+        .main {
+            padding: 24px 32px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .stat-card:hover {
+            background: var(--bg-card-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--glow-cyan);
+        }
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+        }
+        .stat-card:nth-child(1)::before { background: var(--gradient-green); }
+        .stat-card:nth-child(2)::before { background: var(--gradient-green); }
+        .stat-card:nth-child(3)::before { background: var(--gradient-red); }
+        .stat-card:nth-child(4)::before { background: var(--gradient-orange); }
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            font-family: var(--font-mono);
+        }
+        .stat-card:nth-child(1) .stat-value { color: var(--accent-cyan); }
+        .stat-card:nth-child(2) .stat-value { color: var(--accent-green); }
+        .stat-card:nth-child(3) .stat-value { color: var(--accent-red); }
+        .stat-card:nth-child(4) .stat-value { color: var(--accent-orange); }
+
+        /* Grid Layout */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .full-width { grid-column: 1 / -1; }
+
+        /* Section Panels */
+        .panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: box-shadow 0.3s ease;
+        }
+        .panel:hover { box-shadow: 0 4px 24px rgba(0,0,0,0.3); }
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            background: rgba(255,255,255,0.02);
+        }
+        .panel-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .panel-title .icon {
+            font-size: 16px;
+        }
+        .panel-body {
+            padding: 16px 20px;
+        }
+
+        /* Agents Table */
+        .table-wrapper {
+            overflow-x: auto;
+            max-height: 340px;
+            overflow-y: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        th {
+            text-align: left;
+            padding: 10px 12px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            background: var(--bg-card);
+            z-index: 1;
+        }
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid rgba(42, 58, 78, 0.5);
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        tr:hover td {
+            background: rgba(0, 212, 255, 0.03);
+        }
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .badge-online {
+            background: rgba(0, 255, 136, 0.12);
+            color: var(--accent-green);
+            border: 1px solid rgba(0, 255, 136, 0.25);
+        }
+        .badge-offline {
+            background: rgba(255, 71, 87, 0.12);
+            color: var(--accent-red);
+            border: 1px solid rgba(255, 71, 87, 0.25);
+        }
+
+        /* Action Buttons */
+        .btn {
+            padding: 6px 14px;
+            border-radius: 6px;
+            border: none;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: var(--font-sans);
+        }
+        .btn-command {
+            background: rgba(0, 212, 255, 0.12);
+            color: var(--accent-cyan);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+        }
+        .btn-command:hover {
+            background: rgba(0, 212, 255, 0.25);
+            box-shadow: 0 0 12px rgba(0, 212, 255, 0.2);
+        }
+        .btn-danger {
+            background: rgba(255, 71, 87, 0.12);
+            color: var(--accent-red);
+            border: 1px solid rgba(255, 71, 87, 0.3);
+        }
+        .btn-danger:hover {
+            background: rgba(255, 71, 87, 0.25);
+        }
+        .btn-send {
+            background: var(--gradient-green);
+            color: var(--bg-primary);
+            font-weight: 700;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-size: 13px;
+            border: none;
+        }
+        .btn-send:hover {
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+            transform: translateY(-1px);
+        }
+
+        /* Command Panel */
+        .command-form {
+            display: flex;
+            gap: 12px;
+            align-items: flex-end;
+        }
+        .form-group {
+            flex: 1;
+        }
+        .form-group label {
+            display: block;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .form-group select:focus,
+        .form-group input:focus {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+        }
+
+        /* Terminal Output */
+        .terminal {
+            background: #0d1117;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            line-height: 1.6;
+        }
+        .terminal::-webkit-scrollbar { width: 6px; }
+        .terminal::-webkit-scrollbar-track { background: transparent; }
+        .terminal::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        .term-line {
+            padding: 2px 0;
+            display: flex;
+            gap: 8px;
+        }
+        .term-prompt {
+            color: var(--accent-green);
+            user-select: none;
+            flex-shrink: 0;
+        }
+        .term-agent {
+            color: var(--accent-cyan);
+            flex-shrink: 0;
+        }
+        .term-cmd {
+            color: var(--accent-orange);
+        }
+        .term-output {
+            color: var(--text-secondary);
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        .term-time {
+            color: var(--text-muted);
+            font-size: 10px;
+            flex-shrink: 0;
+        }
+
+        /* Log Entries */
+        .log-list {
+            max-height: 280px;
+            overflow-y: auto;
+        }
+        .log-list::-webkit-scrollbar { width: 6px; }
+        .log-list::-webkit-scrollbar-track { background: transparent; }
+        .log-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        .log-entry {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(42, 58, 78, 0.3);
+            font-size: 12px;
+        }
+        .log-type {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 10px;
+            text-transform: uppercase;
+            font-weight: 600;
+            flex-shrink: 0;
+            min-width: 70px;
+            text-align: center;
+        }
+        .log-type-register { background: rgba(0,212,255,0.15); color: var(--accent-cyan); }
+        .log-type-command { background: rgba(168,85,247,0.15); color: var(--accent-purple); }
+        .log-type-output { background: rgba(0,255,136,0.15); color: var(--accent-green); }
+        .log-type-upload { background: rgba(255,140,66,0.15); color: var(--accent-orange); }
+        .log-type-broadcast { background: rgba(255,71,87,0.15); color: var(--accent-red); }
+        .log-type-default { background: rgba(100,116,139,0.15); color: var(--text-muted); }
+        .log-detail { color: var(--text-secondary); flex: 1; }
+        .log-time { color: var(--text-muted); font-family: var(--font-mono); font-size: 11px; flex-shrink: 0; }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+        .empty-state .icon { font-size: 32px; margin-bottom: 12px; display: block; }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .content-grid { grid-template-columns: 1fr; }
+            .main { padding: 16px; }
+            .header { padding: 12px 16px; }
+        }
+        @media (max-width: 640px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .command-form { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <div class="logo">C2</div>
+            <div>
+                <div class="header-title">COMMAND CENTER</div>
+                <div class="header-subtitle">C2 Framework Dashboard v2.0</div>
+            </div>
+        </div>
+        <div class="server-status">
+            <div class="status-dot"></div>
+            <span>SERVER ONLINE</span>
+        </div>
+    </header>
+
+    <main class="main">
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Total Agents</div>
+                <div class="stat-value" id="stat-total">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Online</div>
+                <div class="stat-value" id="stat-online">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Offline</div>
+                <div class="stat-value" id="stat-offline">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Pending Commands</div>
+                <div class="stat-value" id="stat-pending">0</div>
+            </div>
+        </div>
+
+        <!-- Agents Table -->
+        <div class="panel full-width" style="margin-bottom:20px">
+            <div class="panel-header">
+                <div class="panel-title"><span class="icon">🖥️</span> Connected Agents</div>
+                <span style="font-size:12px;color:var(--text-muted)" id="agent-count">0 agents</span>
+            </div>
+            <div class="panel-body" style="padding:0">
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Agent ID</th>
+                                <th>Hostname</th>
+                                <th>User</th>
+                                <th>OS</th>
+                                <th>IP</th>
+                                <th>Status</th>
+                                <th>Last Seen</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="agents-tbody">
+                            <tr><td colspan="8"><div class="empty-state"><span class="icon">📡</span>No agents connected yet</div></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-grid">
+            <!-- Command Panel -->
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title"><span class="icon">⚡</span> Send Command</div>
+                </div>
+                <div class="panel-body">
+                    <div class="command-form">
+                        <div class="form-group">
+                            <label>Target Agent</label>
+                            <select id="agent-select">
+                                <option value="broadcast">📢 Broadcast (All Agents)</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="flex:2">
+                            <label>Command</label>
+                            <input type="text" id="command-input" placeholder="e.g. sysinfo, whoami, ls, ps ..." onkeydown="if(event.key==='Enter')sendCommand()">
+                        </div>
+                        <button class="btn btn-send" onclick="sendCommand()">SEND ▶</button>
+                    </div>
+                    <div style="margin-top:12px;font-size:11px;color:var(--text-muted);font-family:var(--font-mono);">
+                        Built-in: sysinfo • whoami • pwd • ls • cd • ps • env • net • download • upload • help • exit
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Logs -->
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title"><span class="icon">📋</span> Activity Logs</div>
+                </div>
+                <div class="panel-body" style="padding:8px 16px">
+                    <div class="log-list" id="log-list">
+                        <div class="empty-state"><span class="icon">📝</span>No activity yet</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Output Console -->
+        <div class="panel full-width" style="margin-top:20px">
+            <div class="panel-header">
+                <div class="panel-title"><span class="icon">🖥️</span> Output Console</div>
+                <button class="btn btn-command" onclick="clearConsole()" style="font-size:11px">CLEAR</button>
+            </div>
+            <div class="panel-body">
+                <div class="terminal" id="output-terminal">
+                    <div class="term-line">
+                        <span class="term-prompt">$</span>
+                        <span class="term-output" style="color:var(--text-muted)">Waiting for agent output...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const API = window.location.origin;
+        let lastOutputCount = 0;
+        let knownOutputIds = new Set();
+
+        // ── Fetch Dashboard Stats ───────────────────────────────
+        async function fetchDashboard() {
+            try {
+                const res = await fetch(`${API}/dashboard`);
+                const data = await res.json();
+                animateValue('stat-total', data.total_agents);
+                animateValue('stat-online', data.online_agents);
+                animateValue('stat-offline', data.offline_agents);
+                animateValue('stat-pending', data.pending_commands);
+            } catch (e) {
+                console.error('Dashboard fetch error:', e);
+            }
+        }
+
+        function animateValue(id, newVal) {
+            const el = document.getElementById(id);
+            if (el.textContent != newVal) {
+                el.textContent = newVal;
+                el.style.transform = 'scale(1.15)';
+                setTimeout(() => el.style.transform = 'scale(1)', 200);
+            }
+        }
+
+        // ── Fetch Agents ────────────────────────────────────────
+        async function fetchAgents() {
+            try {
+                const res = await fetch(`${API}/agents`);
+                const agents = await res.json();
+                const tbody = document.getElementById('agents-tbody');
+                const select = document.getElementById('agent-select');
+                document.getElementById('agent-count').textContent = `${agents.length} agents`;
+
+                // Update select dropdown
+                const currentVal = select.value;
+                select.innerHTML = '<option value="broadcast">📢 Broadcast (All Agents)</option>';
+                agents.forEach(a => {
+                    const opt = document.createElement('option');
+                    opt.value = a.agent_id;
+                    opt.textContent = `${a.hostname} (${a.agent_id.slice(0,8)}...)`;
+                    select.appendChild(opt);
+                });
+                select.value = currentVal;
+
+                if (agents.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="8"><div class="empty-state"><span class="icon">📡</span>No agents connected yet</div></td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = agents.map(a => {
+                    const lastSeen = timeAgo(a.last_seen);
+                    const badgeClass = a.status === 'online' ? 'badge-online' : 'badge-offline';
+                    return `<tr>
+                        <td title="${a.agent_id}">${a.agent_id.slice(0,12)}...</td>
+                        <td>${esc(a.hostname)}</td>
+                        <td>${esc(a.username)}</td>
+                        <td>${esc(a.os)}</td>
+                        <td>${esc(a.ip_address)}</td>
+                        <td><span class="badge ${badgeClass}">${a.status}</span></td>
+                        <td>${lastSeen}</td>
+                        <td>
+                            <button class="btn btn-command" onclick="quickCmd('${a.agent_id}')">CMD</button>
+                            <button class="btn btn-danger" onclick="removeAgent('${a.agent_id}')">✕</button>
+                        </td>
+                    </tr>`;
+                }).join('');
+            } catch (e) {
+                console.error('Agents fetch error:', e);
+            }
+        }
+
+        // ── Fetch Outputs ───────────────────────────────────────
+        async function fetchOutputs() {
+            try {
+                const res = await fetch(`${API}/outputs`);
+                const data = await res.json();
+                const terminal = document.getElementById('output-terminal');
+
+                data.reverse().forEach(d => {
+                    if (!knownOutputIds.has(d.id)) {
+                        knownOutputIds.add(d.id);
+                        const line = document.createElement('div');
+                        line.className = 'term-line';
+                        line.innerHTML = `
+                            <span class="term-time">${formatTime(d.timestamp)}</span>
+                            <span class="term-agent">[${d.agent_id.slice(0,8)}]</span>
+                            <span class="term-prompt">$</span>
+                            <span class="term-cmd">${esc(d.command)}</span>
+                        `;
+                        terminal.appendChild(line);
+
+                        const outLine = document.createElement('div');
+                        outLine.className = 'term-line';
+                        outLine.innerHTML = `<span class="term-output">${esc(d.output)}</span>`;
+                        terminal.appendChild(outLine);
+                    }
+                });
+
+                terminal.scrollTop = terminal.scrollHeight;
+            } catch (e) {
+                console.error('Outputs fetch error:', e);
+            }
+        }
+
+        // ── Fetch Logs ──────────────────────────────────────────
+        async function fetchLogs() {
+            try {
+                const res = await fetch(`${API}/logs?limit=30`);
+                const data = await res.json();
+                const logList = document.getElementById('log-list');
+
+                if (data.length === 0) {
+                    logList.innerHTML = '<div class="empty-state"><span class="icon">📝</span>No activity yet</div>';
+                    return;
+                }
+
+                logList.innerHTML = data.map(l => {
+                    const typeClass = {
+                        'register': 'log-type-register',
+                        're-register': 'log-type-register',
+                        'command': 'log-type-command',
+                        'output': 'log-type-output',
+                        'upload': 'log-type-upload',
+                        'broadcast': 'log-type-broadcast',
+                    }[l.event_type] || 'log-type-default';
+
+                    return `<div class="log-entry">
+                        <span class="log-type ${typeClass}">${esc(l.event_type)}</span>
+                        <span class="log-detail">${esc(l.detail)}</span>
+                        <span class="log-time">${formatTime(l.timestamp)}</span>
+                    </div>`;
+                }).join('');
+            } catch (e) {
+                console.error('Logs fetch error:', e);
+            }
+        }
+
+        // ── Send Command ────────────────────────────────────────
+        async function sendCommand() {
+            const target = document.getElementById('agent-select').value;
+            const command = document.getElementById('command-input').value.trim();
+            if (!command) return;
+
+            try {
+                if (target === 'broadcast') {
+                    await fetch(`${API}/broadcast`, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({ command })
+                    });
+                } else {
+                    await fetch(`${API}/command`, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({ agent_id: target, command })
+                    });
+                }
+                document.getElementById('command-input').value = '';
+                fetchDashboard();
+                fetchLogs();
+            } catch (e) {
+                console.error('Send command error:', e);
+            }
+        }
+
+        // ── Quick Command (from agents table) ───────────────────
+        function quickCmd(agentId) {
+            document.getElementById('agent-select').value = agentId;
+            document.getElementById('command-input').focus();
+        }
+
+        // ── Remove Agent ────────────────────────────────────────
+        async function removeAgent(agentId) {
+            if (!confirm(`Remove agent ${agentId.slice(0,12)}...?`)) return;
+            try {
+                await fetch(`${API}/agent/${agentId}`, { method: 'DELETE' });
+                fetchDashboard();
+                fetchAgents();
+                fetchLogs();
+            } catch (e) {
+                console.error('Remove agent error:', e);
+            }
+        }
+
+        // ── Clear Console ───────────────────────────────────────
+        function clearConsole() {
+            const terminal = document.getElementById('output-terminal');
+            terminal.innerHTML = '<div class="term-line"><span class="term-prompt">$</span><span class="term-output" style="color:var(--text-muted)">Console cleared.</span></div>';
+            knownOutputIds.clear();
+        }
+
+        // ── Helpers ─────────────────────────────────────────────
+        function esc(str) {
+            if (!str) return '';
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        function timeAgo(epoch) {
+            const diff = Math.floor(Date.now() / 1000) - epoch;
+            if (diff < 5) return 'just now';
+            if (diff < 60) return `${diff}s ago`;
+            if (diff < 3600) return `${Math.floor(diff/60)}m ago`;
+            if (diff < 86400) return `${Math.floor(diff/3600)}h ago`;
+            return `${Math.floor(diff/86400)}d ago`;
+        }
+
+        function formatTime(epoch) {
+            const d = new Date(epoch * 1000);
+            return d.toLocaleTimeString('en-US', { hour12: false });
+        }
+
+        // ── Auto-refresh ────────────────────────────────────────
+        function refreshAll() {
+            fetchDashboard();
+            fetchAgents();
+            fetchOutputs();
+            fetchLogs();
+        }
+
+        refreshAll();
+        setInterval(refreshAll, 5000);
+    </script>
+</body>
+</html>
