@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>C2 Framework — Command Center</title>
+    <meta name="description" content="C2 Framework Command Center Dashboard — manage agents, send commands, monitor activity.">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -21,6 +22,7 @@
             --accent-red: #ff4757;
             --accent-orange: #ff8c42;
             --accent-purple: #a855f7;
+            --accent-yellow: #facc15;
             --gradient-green: linear-gradient(135deg, #00ff88, #00d4ff);
             --gradient-red: linear-gradient(135deg, #ff4757, #ff6b81);
             --gradient-purple: linear-gradient(135deg, #a855f7, #6366f1);
@@ -49,7 +51,166 @@
             z-index: 0;
         }
 
-        /* Header */
+        /* ── LOGIN PAGE ── */
+        .login-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: var(--bg-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+        .login-overlay.hidden { opacity: 0; pointer-events: none; }
+        .login-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 48px 40px;
+            width: 420px;
+            max-width: 90vw;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+        .login-logo {
+            width: 64px; height: 64px;
+            background: var(--gradient-green);
+            border-radius: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--bg-primary);
+            margin-bottom: 20px;
+            box-shadow: var(--glow-green);
+        }
+        .login-title {
+            font-family: var(--font-mono);
+            font-size: 24px;
+            font-weight: 700;
+            background: var(--gradient-green);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+        .login-subtitle {
+            color: var(--text-muted);
+            font-size: 13px;
+            margin-bottom: 32px;
+        }
+        .login-input {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+            margin-bottom: 16px;
+        }
+        .login-input:focus {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+        }
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--gradient-green);
+            color: var(--bg-primary);
+            font-weight: 700;
+            font-size: 14px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: var(--font-sans);
+        }
+        .login-btn:hover {
+            box-shadow: 0 0 24px rgba(0, 255, 136, 0.35);
+            transform: translateY(-1px);
+        }
+        .login-error {
+            color: var(--accent-red);
+            font-size: 12px;
+            margin-top: 12px;
+            display: none;
+        }
+
+        /* ── TOAST NOTIFICATIONS ── */
+        .toast-container {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .toast {
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 280px;
+            max-width: 400px;
+            animation: slideIn 0.3s ease, fadeOut 0.4s ease 3.6s forwards;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+            cursor: pointer;
+        }
+        .toast-success {
+            background: rgba(0, 255, 136, 0.12);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            color: var(--accent-green);
+        }
+        .toast-error {
+            background: rgba(255, 71, 87, 0.12);
+            border: 1px solid rgba(255, 71, 87, 0.3);
+            color: var(--accent-red);
+        }
+        .toast-info {
+            background: rgba(0, 212, 255, 0.12);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            color: var(--accent-cyan);
+        }
+        .toast-warning {
+            background: rgba(255, 140, 66, 0.12);
+            border: 1px solid rgba(255, 140, 66, 0.3);
+            color: var(--accent-orange);
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes fadeOut {
+            to { opacity: 0; transform: translateX(40px); }
+        }
+
+        /* ── ERROR BANNER ── */
+        .error-banner {
+            background: rgba(255, 71, 87, 0.1);
+            border: 1px solid rgba(255, 71, 87, 0.3);
+            color: var(--accent-red);
+            padding: 10px 20px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 500;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .error-banner.visible { display: flex; }
+
+        /* ── HEADER ── */
         .header {
             background: var(--bg-secondary);
             border-bottom: 1px solid var(--border);
@@ -93,6 +254,11 @@
             color: var(--text-muted);
             font-family: var(--font-mono);
         }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
         .server-status {
             display: flex;
             align-items: center;
@@ -115,6 +281,19 @@
             0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(0,255,136,0.4); }
             50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(0,255,136,0); }
         }
+        .btn-logout {
+            padding: 8px 16px;
+            background: rgba(255, 71, 87, 0.1);
+            border: 1px solid rgba(255, 71, 87, 0.3);
+            color: var(--accent-red);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: var(--font-mono);
+            transition: all 0.2s;
+        }
+        .btn-logout:hover { background: rgba(255, 71, 87, 0.2); }
 
         /* Main Layout */
         .main {
@@ -165,6 +344,7 @@
             font-size: 36px;
             font-weight: 700;
             font-family: var(--font-mono);
+            transition: transform 0.2s;
         }
         .stat-card:nth-child(1) .stat-value { color: var(--accent-cyan); }
         .stat-card:nth-child(2) .stat-value { color: var(--accent-green); }
@@ -205,12 +385,13 @@
             align-items: center;
             gap: 8px;
         }
-        .panel-title .icon {
-            font-size: 16px;
+        .panel-title .icon { font-size: 16px; }
+        .panel-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
         }
-        .panel-body {
-            padding: 16px 20px;
-        }
+        .panel-body { padding: 16px 20px; }
 
         /* Agents Table */
         .table-wrapper {
@@ -243,9 +424,8 @@
             font-size: 12px;
             color: var(--text-secondary);
         }
-        tr:hover td {
-            background: rgba(0, 212, 255, 0.03);
-        }
+        tr:hover td { background: rgba(0, 212, 255, 0.03); }
+        tr.clickable { cursor: pointer; }
         .badge {
             display: inline-block;
             padding: 3px 10px;
@@ -264,6 +444,17 @@
             background: rgba(255, 71, 87, 0.12);
             color: var(--accent-red);
             border: 1px solid rgba(255, 71, 87, 0.25);
+        }
+        .tag-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 8px;
+            font-size: 10px;
+            font-weight: 600;
+            background: rgba(168, 85, 247, 0.12);
+            color: var(--accent-purple);
+            border: 1px solid rgba(168, 85, 247, 0.25);
+            margin: 1px 2px;
         }
 
         /* Action Buttons */
@@ -291,9 +482,13 @@
             color: var(--accent-red);
             border: 1px solid rgba(255, 71, 87, 0.3);
         }
-        .btn-danger:hover {
-            background: rgba(255, 71, 87, 0.25);
+        .btn-danger:hover { background: rgba(255, 71, 87, 0.25); }
+        .btn-purple {
+            background: rgba(168, 85, 247, 0.12);
+            color: var(--accent-purple);
+            border: 1px solid rgba(168, 85, 247, 0.3);
         }
+        .btn-purple:hover { background: rgba(168, 85, 247, 0.25); }
         .btn-send {
             background: var(--gradient-green);
             color: var(--bg-primary);
@@ -314,9 +509,7 @@
             gap: 12px;
             align-items: flex-end;
         }
-        .form-group {
-            flex: 1;
-        }
+        .form-group { flex: 1; }
         .form-group label {
             display: block;
             font-size: 11px;
@@ -364,28 +557,11 @@
             display: flex;
             gap: 8px;
         }
-        .term-prompt {
-            color: var(--accent-green);
-            user-select: none;
-            flex-shrink: 0;
-        }
-        .term-agent {
-            color: var(--accent-cyan);
-            flex-shrink: 0;
-        }
-        .term-cmd {
-            color: var(--accent-orange);
-        }
-        .term-output {
-            color: var(--text-secondary);
-            white-space: pre-wrap;
-            word-break: break-all;
-        }
-        .term-time {
-            color: var(--text-muted);
-            font-size: 10px;
-            flex-shrink: 0;
-        }
+        .term-prompt { color: var(--accent-green); user-select: none; flex-shrink: 0; }
+        .term-agent { color: var(--accent-cyan); flex-shrink: 0; }
+        .term-cmd { color: var(--accent-orange); }
+        .term-output { color: var(--text-secondary); white-space: pre-wrap; word-break: break-all; }
+        .term-time { color: var(--text-muted); font-size: 10px; flex-shrink: 0; }
 
         /* Log Entries */
         .log-list {
@@ -423,6 +599,100 @@
         .log-detail { color: var(--text-secondary); flex: 1; }
         .log-time { color: var(--text-muted); font-family: var(--font-mono); font-size: 11px; flex-shrink: 0; }
 
+        /* ── AGENT DETAIL MODAL ── */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 5000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            width: 800px;
+            max-width: 90vw;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+        }
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .modal-header h2 {
+            font-size: 16px;
+            font-family: var(--font-mono);
+            color: var(--accent-cyan);
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 20px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .modal-close:hover { color: var(--accent-red); }
+        .modal-body { padding: 20px 24px; }
+        .modal-info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .modal-info-item {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+        }
+        .modal-info-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+        .modal-info-value {
+            font-family: var(--font-mono);
+            font-size: 13px;
+            color: var(--text-primary);
+        }
+        .modal-section-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 16px 0 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .tag-input-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .tag-input-row input {
+            flex: 1;
+            padding: 8px 12px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+            font-size: 12px;
+            outline: none;
+        }
+
         /* Empty State */
         .empty-state {
             text-align: center;
@@ -442,22 +712,59 @@
         @media (max-width: 640px) {
             .stats-grid { grid-template-columns: 1fr; }
             .command-form { flex-direction: column; }
+            .modal-info-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
+    <!-- Login Overlay -->
+    <div class="login-overlay" id="login-overlay">
+        <div class="login-box">
+            <div class="login-logo">C2</div>
+            <div class="login-title">COMMAND CENTER</div>
+            <div class="login-subtitle">Enter your API key to access the dashboard</div>
+            <input type="password" class="login-input" id="login-key" placeholder="API Key..." onkeydown="if(event.key==='Enter')doLogin()">
+            <button class="login-btn" onclick="doLogin()">AUTHENTICATE ▶</button>
+            <div class="login-error" id="login-error">❌ Invalid API key. Try again.</div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Agent Detail Modal -->
+    <div class="modal-overlay" id="agent-modal" onclick="if(event.target===this)closeModal()">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="modal-title">Agent Details</h2>
+                <button class="modal-close" onclick="closeModal()">✕</button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <!-- Filled dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Banner -->
+    <div class="error-banner" id="error-banner">
+        ⚠️ <span>Server unreachable — Retrying...</span>
+    </div>
+
     <!-- Header -->
     <header class="header">
         <div class="header-left">
             <div class="logo">C2</div>
             <div>
                 <div class="header-title">COMMAND CENTER</div>
-                <div class="header-subtitle">C2 Framework Dashboard v2.0</div>
+                <div class="header-subtitle">C2 Framework Dashboard v3.0</div>
             </div>
         </div>
-        <div class="server-status">
-            <div class="status-dot"></div>
-            <span>SERVER ONLINE</span>
+        <div class="header-right">
+            <div class="server-status">
+                <div class="status-dot"></div>
+                <span>SERVER ONLINE</span>
+            </div>
+            <button class="btn-logout" onclick="doLogout()">🔒 LOGOUT</button>
         </div>
     </header>
 
@@ -498,13 +805,14 @@
                                 <th>User</th>
                                 <th>OS</th>
                                 <th>IP</th>
+                                <th>Tags</th>
                                 <th>Status</th>
                                 <th>Last Seen</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="agents-tbody">
-                            <tr><td colspan="8"><div class="empty-state"><span class="icon">📡</span>No agents connected yet</div></td></tr>
+                            <tr><td colspan="9"><div class="empty-state"><span class="icon">📡</span>No agents connected yet</div></td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -529,10 +837,18 @@
                             <label>Command</label>
                             <input type="text" id="command-input" placeholder="e.g. sysinfo, whoami, ls, ps ..." onkeydown="if(event.key==='Enter')sendCommand()">
                         </div>
+                        <div class="form-group" style="flex:0.5">
+                            <label>Priority</label>
+                            <select id="priority-select">
+                                <option value="0">Normal</option>
+                                <option value="1">High</option>
+                                <option value="2">Urgent</option>
+                            </select>
+                        </div>
                         <button class="btn btn-send" onclick="sendCommand()">SEND ▶</button>
                     </div>
                     <div style="margin-top:12px;font-size:11px;color:var(--text-muted);font-family:var(--font-mono);">
-                        Built-in: sysinfo • whoami • pwd • ls • cd • ps • env • net • download • upload • help • exit
+                        Built-in: sysinfo • whoami • pwd • ls • cd • ps • env • net • screenshot • persist • diskinfo • download • upload • help • exit
                     </div>
                 </div>
             </div>
@@ -541,6 +857,10 @@
             <div class="panel">
                 <div class="panel-header">
                     <div class="panel-title"><span class="icon">📋</span> Activity Logs</div>
+                    <div class="panel-actions">
+                        <button class="btn btn-purple" onclick="exportLogs('json')" style="font-size:11px">📥 JSON</button>
+                        <button class="btn btn-purple" onclick="exportLogs('csv')" style="font-size:11px">📥 CSV</button>
+                    </div>
                 </div>
                 <div class="panel-body" style="padding:8px 16px">
                     <div class="log-list" id="log-list">
@@ -569,19 +889,109 @@
 
     <script>
         const API = window.location.origin;
-        let lastOutputCount = 0;
+        let apiKey = sessionStorage.getItem('c2_api_key') || '';
         let knownOutputIds = new Set();
+        let serverOnline = true;
+        let failCount = 0;
+
+        // ── AUTH HEADERS ────────────────────────────────────────
+        function authHeaders() {
+            return {
+                'Content-Type': 'application/json',
+                'X-API-Key': apiKey
+            };
+        }
+
+        // ── LOGIN / LOGOUT ──────────────────────────────────────
+        function doLogin() {
+            const key = document.getElementById('login-key').value.trim();
+            if (!key) return;
+
+            fetch(`${API}/auth/login`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ api_key: key })
+            })
+            .then(r => {
+                if (!r.ok) throw new Error('Invalid');
+                return r.json();
+            })
+            .then(data => {
+                apiKey = data.api_key;
+                sessionStorage.setItem('c2_api_key', apiKey);
+                document.getElementById('login-overlay').classList.add('hidden');
+                showToast('Authenticated successfully!', 'success');
+                refreshAll();
+            })
+            .catch(() => {
+                document.getElementById('login-error').style.display = 'block';
+                showToast('Invalid API key', 'error');
+            });
+        }
+
+        function doLogout() {
+            apiKey = '';
+            sessionStorage.removeItem('c2_api_key');
+            document.getElementById('login-overlay').classList.remove('hidden');
+            document.getElementById('login-key').value = '';
+            document.getElementById('login-error').style.display = 'none';
+            showToast('Logged out', 'info');
+        }
+
+        // Auto-login if key stored
+        if (apiKey) {
+            document.getElementById('login-overlay').classList.add('hidden');
+        }
+
+        // ── TOAST NOTIFICATIONS ─────────────────────────────────
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const icons = { success: '✅', error: '❌', info: 'ℹ️', warning: '⚠️' };
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.innerHTML = `<span>${icons[type] || 'ℹ️'}</span><span>${message}</span>`;
+            toast.onclick = () => toast.remove();
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
+        }
+
+        // ── ERROR BANNER ────────────────────────────────────────
+        function setServerStatus(online) {
+            const banner = document.getElementById('error-banner');
+            const statusEl = document.querySelector('.server-status');
+            if (online) {
+                banner.classList.remove('visible');
+                statusEl.style.borderColor = 'rgba(0, 255, 136, 0.2)';
+                statusEl.style.color = 'var(--accent-green)';
+                statusEl.querySelector('span').textContent = 'SERVER ONLINE';
+                statusEl.querySelector('.status-dot').style.background = 'var(--accent-green)';
+                if (!serverOnline) showToast('Server reconnected!', 'success');
+            } else {
+                banner.classList.add('visible');
+                statusEl.style.borderColor = 'rgba(255, 71, 87, 0.2)';
+                statusEl.style.color = 'var(--accent-red)';
+                statusEl.querySelector('span').textContent = 'SERVER OFFLINE';
+                statusEl.querySelector('.status-dot').style.background = 'var(--accent-red)';
+                if (serverOnline) showToast('Server unreachable!', 'error');
+            }
+            serverOnline = online;
+        }
 
         // ── Fetch Dashboard Stats ───────────────────────────────
         async function fetchDashboard() {
             try {
-                const res = await fetch(`${API}/dashboard`);
+                const res = await fetch(`${API}/dashboard`, { headers: authHeaders() });
+                if (res.status === 401) { doLogout(); return; }
                 const data = await res.json();
                 animateValue('stat-total', data.total_agents);
                 animateValue('stat-online', data.online_agents);
                 animateValue('stat-offline', data.offline_agents);
                 animateValue('stat-pending', data.pending_commands);
+                setServerStatus(true);
+                failCount = 0;
             } catch (e) {
+                failCount++;
+                if (failCount >= 2) setServerStatus(false);
                 console.error('Dashboard fetch error:', e);
             }
         }
@@ -598,13 +1008,13 @@
         // ── Fetch Agents ────────────────────────────────────────
         async function fetchAgents() {
             try {
-                const res = await fetch(`${API}/agents`);
+                const res = await fetch(`${API}/agents`, { headers: authHeaders() });
+                if (res.status === 401) return;
                 const agents = await res.json();
                 const tbody = document.getElementById('agents-tbody');
                 const select = document.getElementById('agent-select');
                 document.getElementById('agent-count').textContent = `${agents.length} agents`;
 
-                // Update select dropdown
                 const currentVal = select.value;
                 select.innerHTML = '<option value="broadcast">📢 Broadcast (All Agents)</option>';
                 agents.forEach(a => {
@@ -616,24 +1026,29 @@
                 select.value = currentVal;
 
                 if (agents.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="8"><div class="empty-state"><span class="icon">📡</span>No agents connected yet</div></td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="9"><div class="empty-state"><span class="icon">📡</span>No agents connected yet</div></td></tr>';
                     return;
                 }
 
                 tbody.innerHTML = agents.map(a => {
                     const lastSeen = timeAgo(a.last_seen);
                     const badgeClass = a.status === 'online' ? 'badge-online' : 'badge-offline';
-                    return `<tr>
+                    const tags = (a.tags || '').split(',').filter(t => t.trim()).map(t =>
+                        `<span class="tag-badge">${esc(t.trim())}</span>`
+                    ).join('');
+                    return `<tr class="clickable" ondblclick="openAgentDetail('${a.agent_id}')">
                         <td title="${a.agent_id}">${a.agent_id.slice(0,12)}...</td>
                         <td>${esc(a.hostname)}</td>
                         <td>${esc(a.username)}</td>
                         <td>${esc(a.os)}</td>
                         <td>${esc(a.ip_address)}</td>
+                        <td>${tags || '<span style="color:var(--text-muted)">—</span>'}</td>
                         <td><span class="badge ${badgeClass}">${a.status}</span></td>
                         <td>${lastSeen}</td>
                         <td>
-                            <button class="btn btn-command" onclick="quickCmd('${a.agent_id}')">CMD</button>
-                            <button class="btn btn-danger" onclick="removeAgent('${a.agent_id}')">✕</button>
+                            <button class="btn btn-command" onclick="event.stopPropagation();quickCmd('${a.agent_id}')">CMD</button>
+                            <button class="btn btn-purple" onclick="event.stopPropagation();openAgentDetail('${a.agent_id}')" title="Details">🔍</button>
+                            <button class="btn btn-danger" onclick="event.stopPropagation();removeAgent('${a.agent_id}')">✕</button>
                         </td>
                     </tr>`;
                 }).join('');
@@ -642,10 +1057,114 @@
             }
         }
 
+        // ── Agent Detail Modal ──────────────────────────────────
+        async function openAgentDetail(agentId) {
+            const modal = document.getElementById('agent-modal');
+            const body = document.getElementById('modal-body');
+            document.getElementById('modal-title').textContent = `Agent: ${agentId.slice(0,12)}...`;
+
+            // Fetch agent info
+            let agents = [];
+            try {
+                const res = await fetch(`${API}/agents`, { headers: authHeaders() });
+                agents = await res.json();
+            } catch(e) {}
+
+            const agent = agents.find(a => a.agent_id === agentId);
+            if (!agent) {
+                body.innerHTML = '<div class="empty-state">Agent not found</div>';
+                modal.classList.add('active');
+                return;
+            }
+
+            // Fetch command history
+            let history = [];
+            try {
+                const res = await fetch(`${API}/history?agent_id=${agentId}`, { headers: authHeaders() });
+                history = await res.json();
+            } catch(e) {}
+
+            const tags = agent.tags || '';
+            const historyHtml = history.length > 0 ? history.slice(0, 30).map(h => `
+                <div style="padding:8px 0;border-bottom:1px solid rgba(42,58,78,0.3);">
+                    <div style="display:flex;justify-content:space-between;">
+                        <span class="term-cmd" style="font-size:12px;">${esc(h.command)}</span>
+                        <span class="term-time">${formatTime(h.timestamp)}</span>
+                    </div>
+                    <div class="term-output" style="font-size:11px;margin-top:4px;max-height:80px;overflow-y:auto;">${esc(h.output)}</div>
+                </div>
+            `).join('') : '<div class="empty-state" style="padding:20px">No command history</div>';
+
+            body.innerHTML = `
+                <div class="modal-info-grid">
+                    <div class="modal-info-item">
+                        <div class="modal-info-label">Agent ID</div>
+                        <div class="modal-info-value">${agent.agent_id}</div>
+                    </div>
+                    <div class="modal-info-item">
+                        <div class="modal-info-label">Hostname</div>
+                        <div class="modal-info-value">${esc(agent.hostname)}</div>
+                    </div>
+                    <div class="modal-info-item">
+                        <div class="modal-info-label">Username</div>
+                        <div class="modal-info-value">${esc(agent.username)}</div>
+                    </div>
+                    <div class="modal-info-item">
+                        <div class="modal-info-label">OS</div>
+                        <div class="modal-info-value">${esc(agent.os)}</div>
+                    </div>
+                    <div class="modal-info-item">
+                        <div class="modal-info-label">IP Address</div>
+                        <div class="modal-info-value">${esc(agent.ip_address)}</div>
+                    </div>
+                    <div class="modal-info-item">
+                        <div class="modal-info-label">Status</div>
+                        <div class="modal-info-value"><span class="badge ${agent.status === 'online' ? 'badge-online' : 'badge-offline'}">${agent.status}</span></div>
+                    </div>
+                </div>
+
+                <div class="modal-section-title">🏷️ Tags</div>
+                <div id="modal-tags">${(tags || '').split(',').filter(t=>t.trim()).map(t=>`<span class="tag-badge">${esc(t.trim())}</span>`).join('') || '<span style="color:var(--text-muted)">No tags</span>'}</div>
+                <div class="tag-input-row">
+                    <input type="text" id="tag-input" placeholder="e.g. windows, finance, server" value="${esc(tags)}">
+                    <button class="btn btn-purple" onclick="saveTags('${agentId}')">Save Tags</button>
+                </div>
+
+                <div class="modal-section-title">📜 Command History (last 30)</div>
+                <div style="max-height:300px;overflow-y:auto;">${historyHtml}</div>
+            `;
+
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('agent-modal').classList.remove('active');
+        }
+
+        async function saveTags(agentId) {
+            const tags = document.getElementById('tag-input').value.trim();
+            try {
+                const res = await fetch(`${API}/agent/tags`, {
+                    method: 'POST',
+                    headers: authHeaders(),
+                    body: JSON.stringify({ agent_id: agentId, tags: tags })
+                });
+                if (res.ok) {
+                    showToast('Tags updated!', 'success');
+                    fetchAgents();
+                } else {
+                    showToast('Failed to update tags', 'error');
+                }
+            } catch(e) {
+                showToast('Error updating tags', 'error');
+            }
+        }
+
         // ── Fetch Outputs ───────────────────────────────────────
         async function fetchOutputs() {
             try {
-                const res = await fetch(`${API}/outputs`);
+                const res = await fetch(`${API}/outputs`, { headers: authHeaders() });
+                if (res.status === 401) return;
                 const data = await res.json();
                 const terminal = document.getElementById('output-terminal');
 
@@ -678,7 +1197,8 @@
         // ── Fetch Logs ──────────────────────────────────────────
         async function fetchLogs() {
             try {
-                const res = await fetch(`${API}/logs?limit=30`);
+                const res = await fetch(`${API}/logs?limit=30`, { headers: authHeaders() });
+                if (res.status === 401) return;
                 const data = await res.json();
                 const logList = document.getElementById('log-list');
 
@@ -695,6 +1215,8 @@
                         'output': 'log-type-output',
                         'upload': 'log-type-upload',
                         'broadcast': 'log-type-broadcast',
+                        'group_command': 'log-type-broadcast',
+                        'tags': 'log-type-default',
                     }[l.event_type] || 'log-type-default';
 
                     return `<div class="log-entry">
@@ -708,30 +1230,61 @@
             }
         }
 
+        // ── Export Logs ─────────────────────────────────────────
+        async function exportLogs(format) {
+            try {
+                const res = await fetch(`${API}/logs/export?format=${format}`, { headers: authHeaders() });
+                const data = await res.json();
+
+                let blob, filename;
+                if (format === 'csv') {
+                    blob = new Blob([data.csv], { type: 'text/csv' });
+                    filename = 'c2_logs.csv';
+                } else {
+                    blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                    filename = 'c2_logs.json';
+                }
+
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                a.click();
+                URL.revokeObjectURL(url);
+                showToast(`Logs exported as ${format.toUpperCase()}`, 'success');
+            } catch(e) {
+                showToast('Failed to export logs', 'error');
+            }
+        }
+
         // ── Send Command ────────────────────────────────────────
         async function sendCommand() {
             const target = document.getElementById('agent-select').value;
             const command = document.getElementById('command-input').value.trim();
+            const priority = parseInt(document.getElementById('priority-select').value);
             if (!command) return;
 
             try {
                 if (target === 'broadcast') {
                     await fetch(`${API}/broadcast`, {
                         method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({ command })
+                        headers: authHeaders(),
+                        body: JSON.stringify({ command, priority })
                     });
+                    showToast(`Broadcast: ${command}`, 'success');
                 } else {
                     await fetch(`${API}/command`, {
                         method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({ agent_id: target, command })
+                        headers: authHeaders(),
+                        body: JSON.stringify({ agent_id: target, command, priority })
                     });
+                    showToast(`Command sent: ${command}`, 'success');
                 }
                 document.getElementById('command-input').value = '';
                 fetchDashboard();
                 fetchLogs();
             } catch (e) {
+                showToast('Failed to send command', 'error');
                 console.error('Send command error:', e);
             }
         }
@@ -740,17 +1293,23 @@
         function quickCmd(agentId) {
             document.getElementById('agent-select').value = agentId;
             document.getElementById('command-input').focus();
+            showToast(`Target set: ${agentId.slice(0,8)}...`, 'info');
         }
 
         // ── Remove Agent ────────────────────────────────────────
         async function removeAgent(agentId) {
             if (!confirm(`Remove agent ${agentId.slice(0,12)}...?`)) return;
             try {
-                await fetch(`${API}/agent/${agentId}`, { method: 'DELETE' });
+                await fetch(`${API}/agent/${agentId}`, {
+                    method: 'DELETE',
+                    headers: authHeaders()
+                });
+                showToast('Agent removed', 'success');
                 fetchDashboard();
                 fetchAgents();
                 fetchLogs();
             } catch (e) {
+                showToast('Failed to remove agent', 'error');
                 console.error('Remove agent error:', e);
             }
         }
@@ -760,6 +1319,7 @@
             const terminal = document.getElementById('output-terminal');
             terminal.innerHTML = '<div class="term-line"><span class="term-prompt">$</span><span class="term-output" style="color:var(--text-muted)">Console cleared.</span></div>';
             knownOutputIds.clear();
+            showToast('Console cleared', 'info');
         }
 
         // ── Helpers ─────────────────────────────────────────────
@@ -786,6 +1346,7 @@
 
         // ── Auto-refresh ────────────────────────────────────────
         function refreshAll() {
+            if (!apiKey) return;
             fetchDashboard();
             fetchAgents();
             fetchOutputs();

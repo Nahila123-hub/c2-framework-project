@@ -1,0 +1,43 @@
+2026-03-17 18:51:13,720 [INFO] c2.server: [register] 72657ca4-6eb6-4307-87bc-86e0c50f9b49: New agent: 9N1D5HV9C5RTU (Ramashish Gupta)
+2026-03-17 18:51:46,991 [INFO] c2.server: [re-register] 72657ca4-6eb6-4307-87bc-86e0c50f9b49: Agent reconnected: 9N1D5HV9C5RTU
+2026-03-17 18:52:03,844 [INFO] c2.server: [output] 72657ca4-6eb6-4307-87bc-86e0c50f9b49: Output for: sysinfo
+2026-03-17 20:12:59,071 [INFO] c2.server: [register] d9ae58bd-cd4e-43c7-a425-98c6fb4b3e89: New agent: WORKSTATION-01 (john.smith)
+2026-03-17 20:12:59,594 [INFO] c2.server: [register] cf97de75-c99e-44b8-8a7e-7aa2e5a26b45: New agent: DEVBOX-02 (sarah.dev)
+2026-03-17 20:13:00,108 [INFO] c2.server: [register] 45410e04-6061-4db8-bf2f-490781446839: New agent: LAPTOP-03 (mike.jones)
+2026-03-17 20:13:00,647 [INFO] c2.server: [register] c35a53e5-8bce-46c5-a7bb-5462c35031c2: New agent: SERVER-04 (root)
+2026-03-17 20:13:01,204 [INFO] c2.server: [register] e211b23c-468e-4551-a601-87b2ac8b67f2: New agent: MACBOOK-05 (alex.mac)
+2026-03-17 20:13:01,741 [INFO] c2.server: [register] ad0a4d28-c1b7-4f5b-9c86-149594efc87e: New agent: FINANCE-06 (jessica.fin)
+2026-03-17 20:13:02,216 [INFO] c2.server: [register] 019dbc16-2452-4254-a4ec-89e4b4b4d101: New agent: DBSERVER-07 (admin)
+2026-03-17 20:13:02,739 [INFO] c2.server: [register] 3c3dda1a-d641-4829-bf4c-0e253f17e70b: New agent: HR-PC-08 (priya.hr)
+2026-03-17 20:13:03,279 [INFO] c2.server: [register] 756f47af-2718-4eb3-9e39-cdfece984d4d: New agent: WEBSERVER-09 (www-data)
+2026-03-17 20:13:03,797 [INFO] c2.server: [register] 3cfc55b5-694c-4c77-8f2a-06718a6fbb4c: New agent: TESTBOX-10 (qa.test)
+2026-03-17 20:18:35,229 [INFO] c2.server: [register] 459c1189-b435-48c8-8503-010f48109b40: New agent: WORKSTATION-01 (john.smith)
+2026-03-17 20:18:35,745 [INFO] c2.server: [register] 5568f3d0-79f6-4081-abb1-3216a12b67ba: New agent: DEVBOX-02 (sarah.dev)
+2026-03-17 20:18:36,259 [INFO] c2.server: [register] 860ff449-fa08-426a-8179-bbef2fede8d7: New agent: LAPTOP-03 (mike.jones)
+2026-03-17 20:18:36,864 [INFO] c2.server: [register] 28a9eb1d-b457-44a7-a343-dd32b3b0b353: New agent: SERVER-04 (root)
+2026-03-17 20:18:37,366 [INFO] c2.server: [register] e4e6f6c6-ae51-44ef-9e27-527422d56d45: New agent: MACBOOK-05 (alex.mac)
+2026-03-17 20:18:37,911 [INFO] c2.server: [register] aa17b30a-cb25-4662-93be-aaa761686b93: New agent: FINANCE-06 (jessica.fin)
+2026-03-17 20:18:38,485 [INFO] c2.server: [register] 8bffe163-9efe-4f17-a653-32d95b87493e: New agent: DBSERVER-07 (admin)
+2026-03-17 20:18:38,994 [INFO] c2.server: [register] aa868c18-3fcf-40bc-aece-5c51a80fd2c4: New agent: HR-PC-08 (priya.hr)
+2026-03-17 20:18:39,544 [INFO] c2.server: [register] 7692b7c7-d461-4444-8cdc-ef0ede0144fc: New agent: WEBSERVER-09 (www-data)
+2026-03-17 20:18:40,036 [INFO] c2.server: [register] 4d93037b-3fb0-4a4b-8fb0-f635cfb0669c: New agent: TESTBOX-10 (qa.test)
+2026-03-17 20:18:54,215 [INFO] c2.server: Dashboard login successful
+2026-03-17 20:20:54,217 [INFO] c2.server: [command] 72657ca4-6eb6-4307-87bc-86e0c50f9b49: Queued (P0): ls
+2026-03-17 20:22:44,885 [INFO] c2.server: [command] test-unit-001: Queued (P0): ls
+2026-03-23 12:31:50,473 [INFO] c2.server: [register] 32cca1b5-e4ba-4dad-8eca-4a0179bcbfee: New agent: WEBSERVER-09 (www-data)
+2026-03-23 12:31:50,525 [INFO] c2.server: [register] 9099998e-3464-4cb2-a95e-91d87859d230: New agent: TESTBOX-10 (qa.test)
+2026-03-23 12:31:50,744 [INFO] c2.server: [register] 44567ec2-cd83-4914-8cc4-ac5c5606149f: New agent: HR-PC-08 (priya.hr)
+2026-03-23 12:31:54,314 [INFO] c2.server: [register] 2a5880c2-8ab0-426d-a0d0-5a31b6db977e: New agent: SERVER-04 (root)
+2026-03-23 12:31:54,349 [INFO] c2.server: [register] 0cf0aa36-fd78-4660-96bf-aa2ae7c4f9c8: New agent: MACBOOK-05 (alex.mac)
+2026-03-23 12:31:54,381 [INFO] c2.server: [register] bcbe88d8-a370-4d5c-b5da-ed367766ff09: New agent: DEVBOX-02 (sarah.dev)
+2026-03-23 12:31:54,520 [INFO] c2.server: [register] ca4a8669-fb55-44d6-b84c-158c794ed950: New agent: WORKSTATION-01 (john.smith)
+2026-03-23 12:31:54,609 [INFO] c2.server: [register] 9451693b-6ed2-4edf-af76-a5450f7d7d3d: New agent: LAPTOP-03 (mike.jones)
+2026-03-23 12:31:55,038 [INFO] c2.server: [register] 87af0521-9a60-4a1a-a80e-dd481f85596c: New agent: FINANCE-06 (jessica.fin)
+2026-03-23 12:31:55,939 [INFO] c2.server: [register] 205438bb-ffdc-4527-b493-404263bdeb78: New agent: DBSERVER-07 (admin)
+2026-03-23 12:32:39,468 [INFO] c2.server: Dashboard login successful
+2026-03-23 12:33:52,109 [INFO] c2.server: [command] 9451693b-6ed2-4edf-af76-a5450f7d7d3d: Queued (P0): ls
+2026-03-23 12:33:57,420 [INFO] c2.server: [output] 9451693b-6ed2-4edf-af76-a5450f7d7d3d: Output for: ls
+2026-03-23 12:34:27,416 [INFO] c2.server: [command] 9451693b-6ed2-4edf-af76-a5450f7d7d3d: Queued (P0): cd..
+2026-03-23 12:34:32,483 [INFO] c2.server: [output] 9451693b-6ed2-4edf-af76-a5450f7d7d3d: Output for: cd..
+2026-03-23 12:34:41,222 [INFO] c2.server: [command] 9451693b-6ed2-4edf-af76-a5450f7d7d3d: Queued (P0): pwd
+2026-03-23 12:34:46,061 [INFO] c2.server: [output] 9451693b-6ed2-4edf-af76-a5450f7d7d3d: Output for: pwd

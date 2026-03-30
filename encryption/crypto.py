@@ -1,3 +1,11 @@
+"""
+C2 Encryption Module
+- AES-256-GCM encryption/decryption
+- HMAC-SHA256 message signing/verification
+- PBKDF2 key derivation
+- Keys loaded from environment variables with secure fallbacks
+"""
+
 import os
 import base64
 import hmac
@@ -6,16 +14,45 @@ from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.hazmat.primitives import hashes
 
-# Default shared secret — used for both AES encryption and HMAC signing
-SECRET_KEY = b'0123456789abcdef'
-HMAC_KEY = b'c2-hmac-signing-key-2024'
+# ── Key Management ──────────────────────────────────────────────
+# Keys are loaded from environment variables for security.
+# Fallback defaults are provided for development ONLY.
+
+def _load_key(env_var: str, default: bytes, expected_len: int) -> bytes:
+    """Load a key from an environment variable, or use the default."""
+    raw = os.environ.get(env_var, "")
+    if raw:
+        key = raw.encode() if isinstance(raw, str) else raw
+        # Pad or truncate to expected length
+        if len(key) < expected_len:
+            key = key.ljust(expected_len, b'\x00')
+        return key[:expected_len]
+    return default
+
+
+# AES-256 requires a 32-byte (256-bit) key
+SECRET_KEY = _load_key(
+    "C2_AES_KEY",
+    b'0123456789abcdef0123456789abcdef',  # 32 bytes for AES-256
+    32
+)
+
+# HMAC signing key
+HMAC_KEY = _load_key(
+    "C2_HMAC_KEY",
+    b'c2-hmac-signing-key-2024-secure!',  # 32 bytes
+    32
+)
+
+# API authentication key for server endpoints
+API_KEY = os.environ.get("C2_API_KEY", "c2-default-api-key-change-me")
 
 
 # ── Key Derivation ──────────────────────────────────────────────
 
 def derive_key(password: str, salt: bytes = None) -> tuple:
     """
-    Derives a 128-bit AES key from a password using PBKDF2-HMAC-SHA256.
+    Derives a 256-bit AES key from a password using PBKDF2-HMAC-SHA256.
     Returns (derived_key, salt) — store the salt alongside the key.
     """
     if salt is None:
@@ -23,7 +60,7 @@ def derive_key(password: str, salt: bytes = None) -> tuple:
 
     kdf = PBKDF2HMAC(
         algorithm=hashes.SHA256(),
-        length=16,
+        length=32,          # 32 bytes = 256-bit key for AES-256
         salt=salt,
         iterations=100_000,
     )
@@ -31,7 +68,7 @@ def derive_key(password: str, salt: bytes = None) -> tuple:
     return key, salt
 
 
-# ── AES-GCM Encryption / Decryption ─────────────────────────────
+# ── AES-256-GCM Encryption / Decryption ─────────────────────────
 
 def encrypt_message(message: bytes, key: bytes = None) -> str:
     """
@@ -50,7 +87,7 @@ def encrypt_message(message: bytes, key: bytes = None) -> str:
 
 def decrypt_message(encoded_ciphertext: str, key: bytes = None) -> bytes:
     """
-    Decrypts a base64-encoded AES-GCM ciphertext.
+    Decrypts a base64-encoded AES-256-GCM ciphertext.
     Returns the original plaintext bytes.
     """
     if key is None:

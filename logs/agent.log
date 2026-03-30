@@ -1,0 +1,571 @@
+2026-03-17 18:45:57,935 [WARNING] c2.server: Unauthorized API access attempt (key: None)
+2026-03-17 18:45:57,937 [INFO] httpx: HTTP Request: GET http://testserver/agents "HTTP/1.1 401 Unauthorized"
+2026-03-17 18:45:57,966 [WARNING] c2.server: Failed dashboard login attempt
+2026-03-17 18:45:57,967 [INFO] httpx: HTTP Request: POST http://testserver/auth/login "HTTP/1.1 401 Unauthorized"
+2026-03-17 18:45:57,969 [INFO] c2.server: Dashboard login successful
+2026-03-17 18:45:57,970 [INFO] httpx: HTTP Request: POST http://testserver/auth/login "HTTP/1.1 200 OK"
+2026-03-17 18:45:57,984 [WARNING] c2.server: Unauthorized API access attempt (key: None)
+2026-03-17 18:45:57,985 [INFO] httpx: HTTP Request: GET http://testserver/dashboard "HTTP/1.1 401 Unauthorized"
+2026-03-17 18:45:58,020 [INFO] httpx: HTTP Request: GET http://testserver/history "HTTP/1.1 200 OK"
+2026-03-17 18:45:58,025 [INFO] httpx: HTTP Request: GET http://testserver/history?agent_id=test-unit-001 "HTTP/1.1 200 OK"
+2026-03-17 18:45:58,029 [INFO] httpx: HTTP Request: GET http://testserver/ "HTTP/1.1 200 OK"
+2026-03-17 18:45:58,035 [INFO] httpx: HTTP Request: GET http://testserver/logs/export?format=csv "HTTP/1.1 200 OK"
+2026-03-17 18:45:58,039 [INFO] httpx: HTTP Request: GET http://testserver/logs/export?format=json "HTTP/1.1 200 OK"
+2026-03-17 18:45:58,044 [INFO] httpx: HTTP Request: GET http://testserver/logs "HTTP/1.1 200 OK"
+2026-03-17 18:45:58,064 [INFO] c2.server: [output] test-unit-001: Output for: whoami
+2026-03-17 18:45:58,065 [INFO] httpx: HTTP Request: POST http://testserver/send_output "HTTP/1.1 200 OK"
+2026-03-17 18:45:58,069 [INFO] httpx: HTTP Request: GET http://testserver/outputs "HTTP/1.1 200 OK"
+2026-03-17 18:45:58,071 [WARNING] c2.server: Unauthorized API access attempt (key: None)
+2026-03-17 18:45:58,072 [INFO] httpx: HTTP Request: POST http://testserver/command "HTTP/1.1 401 Unauthorized"
+2026-03-17 18:46:54,839 [WARNING] c2.server: Unauthorized API access attempt (key: None)
+2026-03-17 18:46:54,841 [INFO] httpx: HTTP Request: GET http://testserver/agents "HTTP/1.1 401 Unauthorized"
+2026-03-17 18:46:54,848 [INFO] httpx: HTTP Request: GET http://testserver/agents "HTTP/1.1 200 OK"
+2026-03-17 18:46:54,851 [WARNING] c2.server: Failed dashboard login attempt
+2026-03-17 18:46:54,852 [INFO] httpx: HTTP Request: POST http://testserver/auth/login "HTTP/1.1 401 Unauthorized"
+2026-03-17 18:46:54,854 [INFO] c2.server: Dashboard login successful
+2026-03-17 18:46:54,855 [INFO] httpx: HTTP Request: POST http://testserver/auth/login "HTTP/1.1 200 OK"
+2026-03-17 18:46:54,866 [INFO] c2.server: [broadcast] *: Broadcast (P1): sysinfo
+2026-03-17 18:46:54,867 [INFO] httpx: HTTP Request: POST http://testserver/broadcast "HTTP/1.1 200 OK"
+2026-03-17 18:46:54,870 [WARNING] c2.server: Unauthorized API access attempt (key: None)
+2026-03-17 18:46:54,871 [INFO] httpx: HTTP Request: GET http://testserver/dashboard "HTTP/1.1 401 Unauthorized"
+2026-03-17 18:46:54,879 [INFO] httpx: HTTP Request: GET http://testserver/dashboard "HTTP/1.1 200 OK"
+2026-03-17 18:46:54,893 [INFO] c2.server: [register] test-delete-001: New agent: delhost (deluser)
+2026-03-17 18:46:54,895 [INFO] httpx: HTTP Request: POST http://testserver/register "HTTP/1.1 200 OK"
+2026-03-17 18:46:54,906 [INFO] c2.server: [delete_agent] server: Removed agent: test-delete-001
+2026-03-17 18:46:54,907 [INFO] httpx: HTTP Request: DELETE http://testserver/agent/test-delete-001 "HTTP/1.1 200 OK"
+2026-03-17 18:46:54,911 [INFO] httpx: HTTP Request: POST http://testserver/heartbeat "HTTP/1.1 200 OK"
+2026-03-17 18:46:54,916 [INFO] httpx: HTTP Request: GET http://testserver/history "HTTP/1.1 200 OK"
+2026-03-17 18:46:54,919 [INFO] httpx: HTTP Request: GET http://testserver/history?agent_id=test-unit-001 "HTTP/1.1 200 OK"
+2026-03-17 18:46:54,922 [INFO] httpx: HTTP Request: GET http://testserver/ "HTTP/1.1 200 OK"
+2026-03-17 18:46:54,927 [INFO] httpx: HTTP Request: GET http://testserver/logs/export?format=csv "HTTP/1.1 200 OK"
+2026-03-17 18:46:54,932 [INFO] httpx: HTTP Request: GET http://testserver/logs/export?format=json "HTTP/1.1 200 OK"
+2026-03-17 18:46:54,937 [INFO] httpx: HTTP Request: GET http://testserver/logs "HTTP/1.1 200 OK"
+2026-03-17 18:46:54,948 [INFO] c2.server: [register] test-unit-001: New agent: testhost (testuser)
+2026-03-17 18:46:54,949 [INFO] httpx: HTTP Request: POST http://testserver/register "HTTP/1.1 200 OK"
+2026-03-17 18:46:54,959 [INFO] c2.server: [output] test-unit-001: Output for: whoami
+2026-03-17 18:46:54,960 [INFO] httpx: HTTP Request: POST http://testserver/send_output "HTTP/1.1 200 OK"
+2026-03-17 18:46:54,964 [INFO] httpx: HTTP Request: GET http://testserver/outputs "HTTP/1.1 200 OK"
+2026-03-17 18:46:54,966 [WARNING] c2.server: Unauthorized API access attempt (key: None)
+2026-03-17 18:46:54,967 [INFO] httpx: HTTP Request: POST http://testserver/command "HTTP/1.1 401 Unauthorized"
+2026-03-17 18:46:54,978 [INFO] c2.server: [command] test-unit-001: Queued (P2): sysinfo
+2026-03-17 18:46:54,979 [INFO] httpx: HTTP Request: POST http://testserver/command "HTTP/1.1 200 OK"
+2026-03-17 18:46:54,990 [INFO] c2.server: [re-register] test-unit-001: Agent reconnected: testhost
+2026-03-17 18:46:54,991 [INFO] httpx: HTTP Request: POST http://testserver/register "HTTP/1.1 200 OK"
+2026-03-17 18:46:55,000 [INFO] c2.server: [tags] test-unit-001: Tags updated: windows,finance,hq
+2026-03-17 18:46:55,001 [INFO] httpx: HTTP Request: POST http://testserver/agent/tags "HTTP/1.1 200 OK"
+2026-03-17 18:51:13,701 [INFO] c2.agent: Agent ID: 72657ca4-6eb6-4307-87bc-86e0c50f9b49
+2026-03-17 18:51:13,701 [INFO] c2.agent: Server:   http://127.0.0.1:8000
+2026-03-17 18:51:13,701 [INFO] c2.agent: Host:     9N1D5HV9C5RTU
+2026-03-17 18:51:13,701 [INFO] c2.agent: User:     Ramashish Gupta
+2026-03-17 18:51:13,702 [INFO] c2.agent: OS:       Windows 11
+2026-03-17 18:51:13,702 [INFO] c2.agent: Encrypted: False
+2026-03-17 18:51:13,723 [INFO] c2.agent: Registered: {'message': 'agent registered'}
+2026-03-17 18:51:13,724 [INFO] c2.agent: Heartbeat started (every 10s)
+2026-03-17 18:51:13,728 [INFO] c2.agent: Command polling started (every 5s)
+2026-03-17 18:51:13,729 [INFO] c2.agent: Agent ready. Waiting for commands...
+
+2026-03-17 18:51:46,979 [INFO] c2.agent: Agent ID: 72657ca4-6eb6-4307-87bc-86e0c50f9b49
+2026-03-17 18:51:46,979 [INFO] c2.agent: Server:   http://127.0.0.1:8000
+2026-03-17 18:51:46,979 [INFO] c2.agent: Host:     9N1D5HV9C5RTU
+2026-03-17 18:51:46,979 [INFO] c2.agent: User:     Ramashish Gupta
+2026-03-17 18:51:46,979 [INFO] c2.agent: OS:       Windows 11
+2026-03-17 18:51:46,979 [INFO] c2.agent: Encrypted: False
+2026-03-17 18:51:46,993 [INFO] c2.agent: Registered: {'message': 'agent registered'}
+2026-03-17 18:51:46,995 [INFO] c2.agent: Heartbeat started (every 10s)
+2026-03-17 18:51:46,995 [INFO] c2.agent: Command polling started (every 5s)
+2026-03-17 18:51:46,997 [INFO] c2.agent: Agent ready. Waiting for commands...
+
+2026-03-17 18:52:02,569 [WARNING] c2.server: Unauthorized API access attempt (key: None)
+2026-03-17 18:52:02,570 [INFO] httpx: HTTP Request: GET http://testserver/agents "HTTP/1.1 401 Unauthorized"
+2026-03-17 18:52:02,577 [INFO] httpx: HTTP Request: GET http://testserver/agents "HTTP/1.1 200 OK"
+2026-03-17 18:52:02,580 [WARNING] c2.server: Failed dashboard login attempt
+2026-03-17 18:52:02,581 [INFO] httpx: HTTP Request: POST http://testserver/auth/login "HTTP/1.1 401 Unauthorized"
+2026-03-17 18:52:02,583 [INFO] c2.server: Dashboard login successful
+2026-03-17 18:52:02,584 [INFO] httpx: HTTP Request: POST http://testserver/auth/login "HTTP/1.1 200 OK"
+2026-03-17 18:52:02,606 [INFO] c2.server: [broadcast] *: Broadcast (P1): sysinfo
+2026-03-17 18:52:02,608 [INFO] httpx: HTTP Request: POST http://testserver/broadcast "HTTP/1.1 200 OK"
+2026-03-17 18:52:02,612 [WARNING] c2.server: Unauthorized API access attempt (key: None)
+2026-03-17 18:52:02,614 [INFO] httpx: HTTP Request: GET http://testserver/dashboard "HTTP/1.1 401 Unauthorized"
+2026-03-17 18:52:02,627 [INFO] httpx: HTTP Request: GET http://testserver/dashboard "HTTP/1.1 200 OK"
+2026-03-17 18:52:02,651 [INFO] c2.server: [register] test-delete-001: New agent: delhost (deluser)
+2026-03-17 18:52:02,655 [INFO] httpx: HTTP Request: POST http://testserver/register "HTTP/1.1 200 OK"
+2026-03-17 18:52:02,689 [INFO] c2.server: [delete_agent] server: Removed agent: test-delete-001
+2026-03-17 18:52:02,693 [INFO] httpx: HTTP Request: DELETE http://testserver/agent/test-delete-001 "HTTP/1.1 200 OK"
+2026-03-17 18:52:02,706 [INFO] httpx: HTTP Request: POST http://testserver/heartbeat "HTTP/1.1 200 OK"
+2026-03-17 18:52:02,717 [INFO] httpx: HTTP Request: GET http://testserver/history "HTTP/1.1 200 OK"
+2026-03-17 18:52:02,723 [INFO] httpx: HTTP Request: GET http://testserver/history?agent_id=test-unit-001 "HTTP/1.1 200 OK"
+2026-03-17 18:52:02,725 [INFO] httpx: HTTP Request: GET http://testserver/ "HTTP/1.1 200 OK"
+2026-03-17 18:52:02,730 [INFO] httpx: HTTP Request: GET http://testserver/logs/export?format=csv "HTTP/1.1 200 OK"
+2026-03-17 18:52:02,735 [INFO] httpx: HTTP Request: GET http://testserver/logs/export?format=json "HTTP/1.1 200 OK"
+2026-03-17 18:52:02,740 [INFO] httpx: HTTP Request: GET http://testserver/logs "HTTP/1.1 200 OK"
+2026-03-17 18:52:02,753 [INFO] c2.server: [re-register] test-unit-001: Agent reconnected: testhost
+2026-03-17 18:52:02,754 [INFO] httpx: HTTP Request: POST http://testserver/register "HTTP/1.1 200 OK"
+2026-03-17 18:52:02,764 [INFO] c2.server: [output] test-unit-001: Output for: whoami
+2026-03-17 18:52:02,766 [INFO] httpx: HTTP Request: POST http://testserver/send_output "HTTP/1.1 200 OK"
+2026-03-17 18:52:02,769 [INFO] httpx: HTTP Request: GET http://testserver/outputs "HTTP/1.1 200 OK"
+2026-03-17 18:52:02,772 [WARNING] c2.server: Unauthorized API access attempt (key: None)
+2026-03-17 18:52:02,773 [INFO] httpx: HTTP Request: POST http://testserver/command "HTTP/1.1 401 Unauthorized"
+2026-03-17 18:52:02,789 [INFO] c2.server: [command] test-unit-001: Queued (P2): sysinfo
+2026-03-17 18:52:02,790 [INFO] httpx: HTTP Request: POST http://testserver/command "HTTP/1.1 200 OK"
+2026-03-17 18:52:02,799 [INFO] c2.server: [re-register] test-unit-001: Agent reconnected: testhost
+2026-03-17 18:52:02,800 [INFO] httpx: HTTP Request: POST http://testserver/register "HTTP/1.1 200 OK"
+2026-03-17 18:52:02,814 [INFO] c2.server: [tags] test-unit-001: Tags updated: windows,finance,hq
+2026-03-17 18:52:02,816 [INFO] httpx: HTTP Request: POST http://testserver/agent/tags "HTTP/1.1 200 OK"
+2026-03-17 18:52:03,834 [INFO] c2.agent: Command received: sysinfo
+2026-03-17 18:52:03,835 [INFO] c2.agent: Output: hostname: 9N1D5HV9C5RTU
+username: Ramashish Gupta
+os_name: Windows 11
+ip_address: 192.168.0.101
+arch: AMD64
+processor: Intel64 Family 6 Model 186 Stepping 2, GenuineIntel
+python: 3.14.3
+2026-03-17 20:08:18,903 [WARNING] c2.server: Unauthorized API access attempt (key: None)
+2026-03-17 20:08:18,905 [INFO] httpx: HTTP Request: GET http://testserver/agents "HTTP/1.1 401 Unauthorized"
+2026-03-17 20:08:18,916 [INFO] httpx: HTTP Request: GET http://testserver/agents "HTTP/1.1 200 OK"
+2026-03-17 20:08:18,920 [WARNING] c2.server: Failed dashboard login attempt
+2026-03-17 20:08:18,921 [INFO] httpx: HTTP Request: POST http://testserver/auth/login "HTTP/1.1 401 Unauthorized"
+2026-03-17 20:08:18,923 [INFO] c2.server: Dashboard login successful
+2026-03-17 20:08:18,923 [INFO] httpx: HTTP Request: POST http://testserver/auth/login "HTTP/1.1 200 OK"
+2026-03-17 20:08:18,944 [INFO] c2.server: [broadcast] *: Broadcast (P1): sysinfo
+2026-03-17 20:08:18,947 [INFO] httpx: HTTP Request: POST http://testserver/broadcast "HTTP/1.1 200 OK"
+2026-03-17 20:08:18,951 [WARNING] c2.server: Unauthorized API access attempt (key: None)
+2026-03-17 20:08:18,953 [INFO] httpx: HTTP Request: GET http://testserver/dashboard "HTTP/1.1 401 Unauthorized"
+2026-03-17 20:08:18,967 [INFO] httpx: HTTP Request: GET http://testserver/dashboard "HTTP/1.1 200 OK"
+2026-03-17 20:08:18,991 [INFO] c2.server: [register] test-delete-001: New agent: delhost (deluser)
+2026-03-17 20:08:18,993 [INFO] httpx: HTTP Request: POST http://testserver/register "HTTP/1.1 200 OK"
+2026-03-17 20:08:19,012 [INFO] c2.server: [delete_agent] server: Removed agent: test-delete-001
+2026-03-17 20:08:19,014 [INFO] httpx: HTTP Request: DELETE http://testserver/agent/test-delete-001 "HTTP/1.1 200 OK"
+2026-03-17 20:08:19,025 [INFO] httpx: HTTP Request: POST http://testserver/heartbeat "HTTP/1.1 200 OK"
+2026-03-17 20:08:19,033 [INFO] httpx: HTTP Request: GET http://testserver/history "HTTP/1.1 200 OK"
+2026-03-17 20:08:19,040 [INFO] httpx: HTTP Request: GET http://testserver/history?agent_id=test-unit-001 "HTTP/1.1 200 OK"
+2026-03-17 20:08:19,042 [INFO] httpx: HTTP Request: GET http://testserver/ "HTTP/1.1 200 OK"
+2026-03-17 20:08:19,050 [INFO] httpx: HTTP Request: GET http://testserver/logs/export?format=csv "HTTP/1.1 200 OK"
+2026-03-17 20:08:19,054 [INFO] httpx: HTTP Request: GET http://testserver/logs/export?format=json "HTTP/1.1 200 OK"
+2026-03-17 20:08:19,062 [INFO] httpx: HTTP Request: GET http://testserver/logs "HTTP/1.1 200 OK"
+2026-03-17 20:08:19,075 [INFO] c2.server: [re-register] test-unit-001: Agent reconnected: testhost
+2026-03-17 20:08:19,077 [INFO] httpx: HTTP Request: POST http://testserver/register "HTTP/1.1 200 OK"
+2026-03-17 20:08:19,089 [INFO] c2.server: [output] test-unit-001: Output for: whoami
+2026-03-17 20:08:19,091 [INFO] httpx: HTTP Request: POST http://testserver/send_output "HTTP/1.1 200 OK"
+2026-03-17 20:08:19,096 [INFO] httpx: HTTP Request: GET http://testserver/outputs "HTTP/1.1 200 OK"
+2026-03-17 20:08:19,100 [WARNING] c2.server: Unauthorized API access attempt (key: None)
+2026-03-17 20:08:19,102 [INFO] httpx: HTTP Request: POST http://testserver/command "HTTP/1.1 401 Unauthorized"
+2026-03-17 20:08:19,113 [INFO] c2.server: [command] test-unit-001: Queued (P2): sysinfo
+2026-03-17 20:08:19,115 [INFO] httpx: HTTP Request: POST http://testserver/command "HTTP/1.1 200 OK"
+2026-03-17 20:08:37,465 [WARNING] c2.server: Unauthorized API access attempt (key: None)
+2026-03-17 20:08:37,466 [INFO] httpx: HTTP Request: GET http://testserver/agents "HTTP/1.1 401 Unauthorized"
+2026-03-17 20:08:37,473 [INFO] httpx: HTTP Request: GET http://testserver/agents "HTTP/1.1 200 OK"
+2026-03-17 20:08:37,478 [WARNING] c2.server: Failed dashboard login attempt
+2026-03-17 20:08:37,479 [INFO] httpx: HTTP Request: POST http://testserver/auth/login "HTTP/1.1 401 Unauthorized"
+2026-03-17 20:08:37,481 [INFO] c2.server: Dashboard login successful
+2026-03-17 20:08:37,483 [INFO] httpx: HTTP Request: POST http://testserver/auth/login "HTTP/1.1 200 OK"
+2026-03-17 20:08:37,497 [INFO] c2.server: [broadcast] *: Broadcast (P1): sysinfo
+2026-03-17 20:08:37,498 [INFO] httpx: HTTP Request: POST http://testserver/broadcast "HTTP/1.1 200 OK"
+2026-03-17 20:08:37,500 [WARNING] c2.server: Unauthorized API access attempt (key: None)
+2026-03-17 20:08:37,501 [INFO] httpx: HTTP Request: GET http://testserver/dashboard "HTTP/1.1 401 Unauthorized"
+2026-03-17 20:08:37,507 [INFO] httpx: HTTP Request: GET http://testserver/dashboard "HTTP/1.1 200 OK"
+2026-03-17 20:08:37,519 [INFO] c2.server: [register] test-delete-001: New agent: delhost (deluser)
+2026-03-17 20:08:37,520 [INFO] httpx: HTTP Request: POST http://testserver/register "HTTP/1.1 200 OK"
+2026-03-17 20:08:37,532 [INFO] c2.server: [delete_agent] server: Removed agent: test-delete-001
+2026-03-17 20:08:37,533 [INFO] httpx: HTTP Request: DELETE http://testserver/agent/test-delete-001 "HTTP/1.1 200 OK"
+2026-03-17 20:08:37,541 [INFO] httpx: HTTP Request: POST http://testserver/heartbeat "HTTP/1.1 200 OK"
+2026-03-17 20:08:37,546 [INFO] httpx: HTTP Request: GET http://testserver/history "HTTP/1.1 200 OK"
+2026-03-17 20:08:37,550 [INFO] httpx: HTTP Request: GET http://testserver/history?agent_id=test-unit-001 "HTTP/1.1 200 OK"
+2026-03-17 20:08:37,553 [INFO] httpx: HTTP Request: GET http://testserver/ "HTTP/1.1 200 OK"
+2026-03-17 20:08:37,558 [INFO] httpx: HTTP Request: GET http://testserver/logs/export?format=csv "HTTP/1.1 200 OK"
+2026-03-17 20:08:37,561 [INFO] httpx: HTTP Request: GET http://testserver/logs/export?format=json "HTTP/1.1 200 OK"
+2026-03-17 20:08:37,566 [INFO] httpx: HTTP Request: GET http://testserver/logs "HTTP/1.1 200 OK"
+2026-03-17 20:08:37,572 [INFO] c2.server: [re-register] test-unit-001: Agent reconnected: testhost
+2026-03-17 20:08:37,574 [INFO] httpx: HTTP Request: POST http://testserver/register "HTTP/1.1 200 OK"
+2026-03-17 20:08:37,582 [INFO] c2.server: [output] test-unit-001: Output for: whoami
+2026-03-17 20:08:37,583 [INFO] httpx: HTTP Request: POST http://testserver/send_output "HTTP/1.1 200 OK"
+2026-03-17 20:08:37,588 [INFO] httpx: HTTP Request: GET http://testserver/outputs "HTTP/1.1 200 OK"
+2026-03-17 20:08:37,590 [WARNING] c2.server: Unauthorized API access attempt (key: None)
+2026-03-17 20:08:37,591 [INFO] httpx: HTTP Request: POST http://testserver/command "HTTP/1.1 401 Unauthorized"
+2026-03-17 20:08:37,600 [INFO] c2.server: [command] test-unit-001: Queued (P2): sysinfo
+2026-03-17 20:08:37,601 [INFO] httpx: HTTP Request: POST http://testserver/command "HTTP/1.1 200 OK"
+2026-03-17 20:08:37,610 [INFO] c2.server: [re-register] test-unit-001: Agent reconnected: testhost
+2026-03-17 20:08:37,611 [INFO] httpx: HTTP Request: POST http://testserver/register "HTTP/1.1 200 OK"
+2026-03-17 20:08:37,620 [INFO] c2.server: [tags] test-unit-001: Tags updated: windows,finance,hq
+2026-03-17 20:08:37,622 [INFO] httpx: HTTP Request: POST http://testserver/agent/tags "HTTP/1.1 200 OK"
+2026-03-17 20:12:59,038 [INFO] c2.agent: Agent ID: d9ae58bd-cd4e-43c7-a425-98c6fb4b3e89
+2026-03-17 20:12:59,038 [INFO] c2.agent: Server:   http://127.0.0.1:8000
+2026-03-17 20:12:59,038 [INFO] c2.agent: Host:     WORKSTATION-01
+2026-03-17 20:12:59,038 [INFO] c2.agent: User:     john.smith
+2026-03-17 20:12:59,038 [INFO] c2.agent: OS:       Windows 11
+2026-03-17 20:12:59,038 [INFO] c2.agent: Encrypted: False
+2026-03-17 20:12:59,075 [INFO] c2.agent: Registered: {'message': 'agent registered'}
+2026-03-17 20:12:59,075 [INFO] c2.agent: Heartbeat started (every 10s)
+2026-03-17 20:12:59,075 [INFO] c2.agent: Command polling started (every 5s)
+2026-03-17 20:12:59,076 [INFO] c2.agent: Agent ready. Waiting for commands...
+
+2026-03-17 20:12:59,575 [INFO] c2.agent: Agent ID: cf97de75-c99e-44b8-8a7e-7aa2e5a26b45
+2026-03-17 20:12:59,575 [INFO] c2.agent: Server:   http://127.0.0.1:8000
+2026-03-17 20:12:59,575 [INFO] c2.agent: Host:     DEVBOX-02
+2026-03-17 20:12:59,575 [INFO] c2.agent: User:     sarah.dev
+2026-03-17 20:12:59,575 [INFO] c2.agent: OS:       Ubuntu 22.04
+2026-03-17 20:12:59,575 [INFO] c2.agent: Encrypted: False
+2026-03-17 20:12:59,597 [INFO] c2.agent: Registered: {'message': 'agent registered'}
+2026-03-17 20:12:59,598 [INFO] c2.agent: Heartbeat started (every 10s)
+2026-03-17 20:12:59,598 [INFO] c2.agent: Command polling started (every 5s)
+2026-03-17 20:12:59,598 [INFO] c2.agent: Agent ready. Waiting for commands...
+
+2026-03-17 20:13:00,091 [INFO] c2.agent: Agent ID: 45410e04-6061-4db8-bf2f-490781446839
+2026-03-17 20:13:00,091 [INFO] c2.agent: Server:   http://127.0.0.1:8000
+2026-03-17 20:13:00,091 [INFO] c2.agent: Host:     LAPTOP-03
+2026-03-17 20:13:00,091 [INFO] c2.agent: User:     mike.jones
+2026-03-17 20:13:00,091 [INFO] c2.agent: OS:       Windows 10
+2026-03-17 20:13:00,091 [INFO] c2.agent: Encrypted: False
+2026-03-17 20:13:00,110 [INFO] c2.agent: Registered: {'message': 'agent registered'}
+2026-03-17 20:13:00,110 [INFO] c2.agent: Heartbeat started (every 10s)
+2026-03-17 20:13:00,110 [INFO] c2.agent: Command polling started (every 5s)
+2026-03-17 20:13:00,110 [INFO] c2.agent: Agent ready. Waiting for commands...
+
+2026-03-17 20:13:00,626 [INFO] c2.agent: Agent ID: c35a53e5-8bce-46c5-a7bb-5462c35031c2
+2026-03-17 20:13:00,626 [INFO] c2.agent: Server:   http://127.0.0.1:8000
+2026-03-17 20:13:00,626 [INFO] c2.agent: Host:     SERVER-04
+2026-03-17 20:13:00,626 [INFO] c2.agent: User:     root
+2026-03-17 20:13:00,626 [INFO] c2.agent: OS:       CentOS 9
+2026-03-17 20:13:00,626 [INFO] c2.agent: Encrypted: False
+2026-03-17 20:13:00,649 [INFO] c2.agent: Registered: {'message': 'agent registered'}
+2026-03-17 20:13:00,650 [INFO] c2.agent: Heartbeat started (every 10s)
+2026-03-17 20:13:00,651 [INFO] c2.agent: Command polling started (every 5s)
+2026-03-17 20:13:00,651 [INFO] c2.agent: Agent ready. Waiting for commands...
+
+2026-03-17 20:13:01,188 [INFO] c2.agent: Agent ID: e211b23c-468e-4551-a601-87b2ac8b67f2
+2026-03-17 20:13:01,188 [INFO] c2.agent: Server:   http://127.0.0.1:8000
+2026-03-17 20:13:01,188 [INFO] c2.agent: Host:     MACBOOK-05
+2026-03-17 20:13:01,188 [INFO] c2.agent: User:     alex.mac
+2026-03-17 20:13:01,188 [INFO] c2.agent: OS:       macOS 14
+2026-03-17 20:13:01,188 [INFO] c2.agent: Encrypted: False
+2026-03-17 20:13:01,207 [INFO] c2.agent: Registered: {'message': 'agent registered'}
+2026-03-17 20:13:01,208 [INFO] c2.agent: Heartbeat started (every 10s)
+2026-03-17 20:13:01,208 [INFO] c2.agent: Command polling started (every 5s)
+2026-03-17 20:13:01,208 [INFO] c2.agent: Agent ready. Waiting for commands...
+
+2026-03-17 20:13:01,723 [INFO] c2.agent: Agent ID: ad0a4d28-c1b7-4f5b-9c86-149594efc87e
+2026-03-17 20:13:01,723 [INFO] c2.agent: Server:   http://127.0.0.1:8000
+2026-03-17 20:13:01,723 [INFO] c2.agent: Host:     FINANCE-06
+2026-03-17 20:13:01,723 [INFO] c2.agent: User:     jessica.fin
+2026-03-17 20:13:01,723 [INFO] c2.agent: OS:       Windows 11
+2026-03-17 20:13:01,723 [INFO] c2.agent: Encrypted: False
+2026-03-17 20:13:01,743 [INFO] c2.agent: Registered: {'message': 'agent registered'}
+2026-03-17 20:13:01,744 [INFO] c2.agent: Heartbeat started (every 10s)
+2026-03-17 20:13:01,744 [INFO] c2.agent: Command polling started (every 5s)
+2026-03-17 20:13:01,744 [INFO] c2.agent: Agent ready. Waiting for commands...
+
+2026-03-17 20:13:02,195 [INFO] c2.agent: Agent ID: 019dbc16-2452-4254-a4ec-89e4b4b4d101
+2026-03-17 20:13:02,195 [INFO] c2.agent: Server:   http://127.0.0.1:8000
+2026-03-17 20:13:02,195 [INFO] c2.agent: Host:     DBSERVER-07
+2026-03-17 20:13:02,195 [INFO] c2.agent: User:     admin
+2026-03-17 20:13:02,195 [INFO] c2.agent: OS:       Debian 12
+2026-03-17 20:13:02,195 [INFO] c2.agent: Encrypted: False
+2026-03-17 20:13:02,218 [INFO] c2.agent: Registered: {'message': 'agent registered'}
+2026-03-17 20:13:02,219 [INFO] c2.agent: Heartbeat started (every 10s)
+2026-03-17 20:13:02,219 [INFO] c2.agent: Command polling started (every 5s)
+2026-03-17 20:13:02,220 [INFO] c2.agent: Agent ready. Waiting for commands...
+
+2026-03-17 20:13:02,721 [INFO] c2.agent: Agent ID: 3c3dda1a-d641-4829-bf4c-0e253f17e70b
+2026-03-17 20:13:02,721 [INFO] c2.agent: Server:   http://127.0.0.1:8000
+2026-03-17 20:13:02,721 [INFO] c2.agent: Host:     HR-PC-08
+2026-03-17 20:13:02,721 [INFO] c2.agent: User:     priya.hr
+2026-03-17 20:13:02,721 [INFO] c2.agent: OS:       Windows 10
+2026-03-17 20:13:02,721 [INFO] c2.agent: Encrypted: False
+2026-03-17 20:13:02,741 [INFO] c2.agent: Registered: {'message': 'agent registered'}
+2026-03-17 20:13:02,742 [INFO] c2.agent: Heartbeat started (every 10s)
+2026-03-17 20:13:02,742 [INFO] c2.agent: Command polling started (every 5s)
+2026-03-17 20:13:02,742 [INFO] c2.agent: Agent ready. Waiting for commands...
+
+2026-03-17 20:13:03,257 [INFO] c2.agent: Agent ID: 756f47af-2718-4eb3-9e39-cdfece984d4d
+2026-03-17 20:13:03,257 [INFO] c2.agent: Server:   http://127.0.0.1:8000
+2026-03-17 20:13:03,257 [INFO] c2.agent: Host:     WEBSERVER-09
+2026-03-17 20:13:03,257 [INFO] c2.agent: User:     www-data
+2026-03-17 20:13:03,257 [INFO] c2.agent: OS:       Ubuntu 22.04
+2026-03-17 20:13:03,257 [INFO] c2.agent: Encrypted: False
+2026-03-17 20:13:03,281 [INFO] c2.agent: Registered: {'message': 'agent registered'}
+2026-03-17 20:13:03,282 [INFO] c2.agent: Heartbeat started (every 10s)
+2026-03-17 20:13:03,282 [INFO] c2.agent: Command polling started (every 5s)
+2026-03-17 20:13:03,283 [INFO] c2.agent: Agent ready. Waiting for commands...
+
+2026-03-17 20:13:03,777 [INFO] c2.agent: Agent ID: 3cfc55b5-694c-4c77-8f2a-06718a6fbb4c
+2026-03-17 20:13:03,777 [INFO] c2.agent: Server:   http://127.0.0.1:8000
+2026-03-17 20:13:03,777 [INFO] c2.agent: Host:     TESTBOX-10
+2026-03-17 20:13:03,777 [INFO] c2.agent: User:     qa.test
+2026-03-17 20:13:03,777 [INFO] c2.agent: OS:       Kali Linux
+2026-03-17 20:13:03,777 [INFO] c2.agent: Encrypted: False
+2026-03-17 20:13:03,799 [INFO] c2.agent: Registered: {'message': 'agent registered'}
+2026-03-17 20:13:03,799 [INFO] c2.agent: Heartbeat started (every 10s)
+2026-03-17 20:13:03,799 [INFO] c2.agent: Command polling started (every 5s)
+2026-03-17 20:13:03,799 [INFO] c2.agent: Agent ready. Waiting for commands...
+
+2026-03-17 20:15:53,840 [WARNING] c2.agent: Agent interrupted by user.
+2026-03-17 20:15:53,840 [WARNING] c2.agent: Agent interrupted by user.
+2026-03-17 20:15:53,840 [WARNING] c2.agent: Agent interrupted by user.
+2026-03-17 20:15:53,840 [WARNING] c2.agent: Agent interrupted by user.
+2026-03-17 20:15:53,840 [WARNING] c2.agent: Agent interrupted by user.
+2026-03-17 20:15:53,841 [WARNING] c2.agent: Agent interrupted by user.
+2026-03-17 20:15:53,841 [WARNING] c2.agent: Agent interrupted by user.
+2026-03-17 20:15:53,842 [WARNING] c2.agent: Agent interrupted by user.
+2026-03-17 20:18:35,180 [INFO] c2.agent: Agent ID: 459c1189-b435-48c8-8503-010f48109b40
+2026-03-17 20:18:35,181 [INFO] c2.agent: Server:   http://127.0.0.1:8000
+2026-03-17 20:18:35,181 [INFO] c2.agent: Host:     WORKSTATION-01
+2026-03-17 20:18:35,181 [INFO] c2.agent: User:     john.smith
+2026-03-17 20:18:35,181 [INFO] c2.agent: OS:       Windows 11
+2026-03-17 20:18:35,181 [INFO] c2.agent: Encrypted: False
+2026-03-17 20:18:35,232 [INFO] c2.agent: Registered: {'message': 'agent registered'}
+2026-03-17 20:18:35,234 [INFO] c2.agent: Heartbeat started (every 10s)
+2026-03-17 20:18:35,234 [INFO] c2.agent: Command polling started (every 5s)
+2026-03-17 20:18:35,235 [INFO] c2.agent: Agent ready. Waiting for commands...
+
+2026-03-17 20:18:35,723 [INFO] c2.agent: Agent ID: 5568f3d0-79f6-4081-abb1-3216a12b67ba
+2026-03-17 20:18:35,723 [INFO] c2.agent: Server:   http://127.0.0.1:8000
+2026-03-17 20:18:35,723 [INFO] c2.agent: Host:     DEVBOX-02
+2026-03-17 20:18:35,723 [INFO] c2.agent: User:     sarah.dev
+2026-03-17 20:18:35,723 [INFO] c2.agent: OS:       Ubuntu 22.04
+2026-03-17 20:18:35,723 [INFO] c2.agent: Encrypted: False
+2026-03-17 20:18:35,748 [INFO] c2.agent: Registered: {'message': 'agent registered'}
+2026-03-17 20:18:35,749 [INFO] c2.agent: Heartbeat started (every 10s)
+2026-03-17 20:18:35,749 [INFO] c2.agent: Command polling started (every 5s)
+2026-03-17 20:18:35,750 [INFO] c2.agent: Agent ready. Waiting for commands...
+
+2026-03-17 20:18:36,236 [INFO] c2.agent: Agent ID: 860ff449-fa08-426a-8179-bbef2fede8d7
+2026-03-17 20:18:36,237 [INFO] c2.agent: Server:   http://127.0.0.1:8000
+2026-03-17 20:18:36,237 [INFO] c2.agent: Host:     LAPTOP-03
+2026-03-17 20:18:36,237 [INFO] c2.agent: User:     mike.jones
+2026-03-17 20:18:36,237 [INFO] c2.agent: OS:       Windows 10
+2026-03-17 20:18:36,237 [INFO] c2.agent: Encrypted: False
+2026-03-17 20:18:36,262 [INFO] c2.agent: Registered: {'message': 'agent registered'}
+2026-03-17 20:18:36,264 [INFO] c2.agent: Heartbeat started (every 10s)
+2026-03-17 20:18:36,264 [INFO] c2.agent: Command polling started (every 5s)
+2026-03-17 20:18:36,264 [INFO] c2.agent: Agent ready. Waiting for commands...
+
+2026-03-17 20:18:36,846 [INFO] c2.agent: Agent ID: 28a9eb1d-b457-44a7-a343-dd32b3b0b353
+2026-03-17 20:18:36,846 [INFO] c2.agent: Server:   http://127.0.0.1:8000
+2026-03-17 20:18:36,846 [INFO] c2.agent: Host:     SERVER-04
+2026-03-17 20:18:36,846 [INFO] c2.agent: User:     root
+2026-03-17 20:18:36,846 [INFO] c2.agent: OS:       CentOS 9
+2026-03-17 20:18:36,846 [INFO] c2.agent: Encrypted: False
+2026-03-17 20:18:36,867 [INFO] c2.agent: Registered: {'message': 'agent registered'}
+2026-03-17 20:18:36,867 [INFO] c2.agent: Heartbeat started (every 10s)
+2026-03-17 20:18:36,868 [INFO] c2.agent: Command polling started (every 5s)
+2026-03-17 20:18:36,868 [INFO] c2.agent: Agent ready. Waiting for commands...
+
+2026-03-17 20:18:37,343 [INFO] c2.agent: Agent ID: e4e6f6c6-ae51-44ef-9e27-527422d56d45
+2026-03-17 20:18:37,344 [INFO] c2.agent: Server:   http://127.0.0.1:8000
+2026-03-17 20:18:37,344 [INFO] c2.agent: Host:     MACBOOK-05
+2026-03-17 20:18:37,344 [INFO] c2.agent: User:     alex.mac
+2026-03-17 20:18:37,344 [INFO] c2.agent: OS:       macOS 14
+2026-03-17 20:18:37,344 [INFO] c2.agent: Encrypted: False
+2026-03-17 20:18:37,368 [INFO] c2.agent: Registered: {'message': 'agent registered'}
+2026-03-17 20:18:37,369 [INFO] c2.agent: Heartbeat started (every 10s)
+2026-03-17 20:18:37,369 [INFO] c2.agent: Command polling started (every 5s)
+2026-03-17 20:18:37,369 [INFO] c2.agent: Agent ready. Waiting for commands...
+
+2026-03-17 20:18:37,883 [INFO] c2.agent: Agent ID: aa17b30a-cb25-4662-93be-aaa761686b93
+2026-03-17 20:18:37,883 [INFO] c2.agent: Server:   http://127.0.0.1:8000
+2026-03-17 20:18:37,883 [INFO] c2.agent: Host:     FINANCE-06
+2026-03-17 20:18:37,883 [INFO] c2.agent: User:     jessica.fin
+2026-03-17 20:18:37,883 [INFO] c2.agent: OS:       Windows 11
+2026-03-17 20:18:37,883 [INFO] c2.agent: Encrypted: False
+2026-03-17 20:18:37,914 [INFO] c2.agent: Registered: {'message': 'agent registered'}
+2026-03-17 20:18:37,915 [INFO] c2.agent: Heartbeat started (every 10s)
+2026-03-17 20:18:37,915 [INFO] c2.agent: Command polling started (every 5s)
+2026-03-17 20:18:37,916 [INFO] c2.agent: Agent ready. Waiting for commands...
+
+2026-03-17 20:18:38,454 [INFO] c2.agent: Agent ID: 8bffe163-9efe-4f17-a653-32d95b87493e
+2026-03-17 20:18:38,454 [INFO] c2.agent: Server:   http://127.0.0.1:8000
+2026-03-17 20:18:38,454 [INFO] c2.agent: Host:     DBSERVER-07
+2026-03-17 20:18:38,454 [INFO] c2.agent: User:     admin
+2026-03-17 20:18:38,454 [INFO] c2.agent: OS:       Debian 12
+2026-03-17 20:18:38,454 [INFO] c2.agent: Encrypted: False
+2026-03-17 20:18:38,488 [INFO] c2.agent: Registered: {'message': 'agent registered'}
+2026-03-17 20:18:38,492 [INFO] c2.agent: Heartbeat started (every 10s)
+2026-03-17 20:18:38,493 [INFO] c2.agent: Command polling started (every 5s)
+2026-03-17 20:18:38,493 [INFO] c2.agent: Agent ready. Waiting for commands...
+
+2026-03-17 20:18:38,971 [INFO] c2.agent: Agent ID: aa868c18-3fcf-40bc-aece-5c51a80fd2c4
+2026-03-17 20:18:38,971 [INFO] c2.agent: Server:   http://127.0.0.1:8000
+2026-03-17 20:18:38,971 [INFO] c2.agent: Host:     HR-PC-08
+2026-03-17 20:18:38,971 [INFO] c2.agent: User:     priya.hr
+2026-03-17 20:18:38,971 [INFO] c2.agent: OS:       Windows 10
+2026-03-17 20:18:38,971 [INFO] c2.agent: Encrypted: False
+2026-03-17 20:18:38,997 [INFO] c2.agent: Registered: {'message': 'agent registered'}
+2026-03-17 20:18:38,999 [INFO] c2.agent: Heartbeat started (every 10s)
+2026-03-17 20:18:38,999 [INFO] c2.agent: Command polling started (every 5s)
+2026-03-17 20:18:38,999 [INFO] c2.agent: Agent ready. Waiting for commands...
+
+2026-03-17 20:18:39,521 [INFO] c2.agent: Agent ID: 7692b7c7-d461-4444-8cdc-ef0ede0144fc
+2026-03-17 20:18:39,521 [INFO] c2.agent: Server:   http://127.0.0.1:8000
+2026-03-17 20:18:39,522 [INFO] c2.agent: Host:     WEBSERVER-09
+2026-03-17 20:18:39,522 [INFO] c2.agent: User:     www-data
+2026-03-17 20:18:39,522 [INFO] c2.agent: OS:       Ubuntu 22.04
+2026-03-17 20:18:39,522 [INFO] c2.agent: Encrypted: False
+2026-03-17 20:18:39,547 [INFO] c2.agent: Registered: {'message': 'agent registered'}
+2026-03-17 20:18:39,548 [INFO] c2.agent: Heartbeat started (every 10s)
+2026-03-17 20:18:39,548 [INFO] c2.agent: Command polling started (every 5s)
+2026-03-17 20:18:39,548 [INFO] c2.agent: Agent ready. Waiting for commands...
+
+2026-03-17 20:18:40,015 [INFO] c2.agent: Agent ID: 4d93037b-3fb0-4a4b-8fb0-f635cfb0669c
+2026-03-17 20:18:40,016 [INFO] c2.agent: Server:   http://127.0.0.1:8000
+2026-03-17 20:18:40,016 [INFO] c2.agent: Host:     TESTBOX-10
+2026-03-17 20:18:40,016 [INFO] c2.agent: User:     qa.test
+2026-03-17 20:18:40,016 [INFO] c2.agent: OS:       Kali Linux
+2026-03-17 20:18:40,016 [INFO] c2.agent: Encrypted: False
+2026-03-17 20:18:40,038 [INFO] c2.agent: Registered: {'message': 'agent registered'}
+2026-03-17 20:18:40,039 [INFO] c2.agent: Heartbeat started (every 10s)
+2026-03-17 20:18:40,040 [INFO] c2.agent: Command polling started (every 5s)
+2026-03-17 20:18:40,040 [INFO] c2.agent: Agent ready. Waiting for commands...
+
+2026-03-17 20:26:43,125 [WARNING] c2.agent: Agent interrupted by user.
+2026-03-17 20:26:43,125 [WARNING] c2.agent: Agent interrupted by user.
+2026-03-17 20:26:43,125 [WARNING] c2.agent: Agent interrupted by user.
+2026-03-17 20:26:43,125 [WARNING] c2.agent: Agent interrupted by user.
+2026-03-17 20:26:43,125 [WARNING] c2.agent: Agent interrupted by user.
+2026-03-17 20:26:43,126 [WARNING] c2.agent: Agent interrupted by user.
+2026-03-17 20:26:43,126 [WARNING] c2.agent: Agent interrupted by user.
+2026-03-17 20:26:43,127 [WARNING] c2.agent: Agent interrupted by user.
+2026-03-23 12:31:47,195 [INFO] c2.agent: Agent ID: bcbe88d8-a370-4d5c-b5da-ed367766ff09
+2026-03-23 12:31:47,198 [INFO] c2.agent: Server:   http://127.0.0.1:8000
+2026-03-23 12:31:47,198 [INFO] c2.agent: Host:     DEVBOX-02
+2026-03-23 12:31:47,199 [INFO] c2.agent: User:     sarah.dev
+2026-03-23 12:31:47,199 [INFO] c2.agent: Host:     SERVER-04
+2026-03-23 12:31:47,199 [INFO] c2.agent: OS:       Ubuntu 22.04
+2026-03-23 12:31:47,199 [INFO] c2.agent: User:     root
+2026-03-23 12:31:47,199 [INFO] c2.agent: Encrypted: False
+2026-03-23 12:31:47,199 [INFO] c2.agent: OS:       CentOS 9
+2026-03-23 12:31:47,199 [INFO] c2.agent: Encrypted: False
+2026-03-23 12:31:47,215 [INFO] c2.agent: Agent ID: 0cf0aa36-fd78-4660-96bf-aa2ae7c4f9c8
+2026-03-23 12:31:47,216 [INFO] c2.agent: Server:   http://127.0.0.1:8000
+2026-03-23 12:31:47,216 [INFO] c2.agent: Host:     MACBOOK-05
+2026-03-23 12:31:47,216 [INFO] c2.agent: User:     alex.mac
+2026-03-23 12:31:47,216 [INFO] c2.agent: OS:       macOS 14
+2026-03-23 12:31:47,217 [INFO] c2.agent: Encrypted: False
+2026-03-23 12:31:47,245 [INFO] c2.agent: Agent ID: 9451693b-6ed2-4edf-af76-a5450f7d7d3d
+2026-03-23 12:31:47,246 [INFO] c2.agent: Server:   http://127.0.0.1:8000
+2026-03-23 12:31:47,246 [INFO] c2.agent: Host:     LAPTOP-03
+2026-03-23 12:31:47,246 [INFO] c2.agent: User:     mike.jones
+2026-03-23 12:31:47,246 [INFO] c2.agent: OS:       Windows 10
+2026-03-23 12:31:47,246 [INFO] c2.agent: Encrypted: False
+2026-03-23 12:31:47,294 [INFO] c2.agent: Agent ID: ca4a8669-fb55-44d6-b84c-158c794ed950
+2026-03-23 12:31:47,295 [INFO] c2.agent: Server:   http://127.0.0.1:8000
+2026-03-23 12:31:47,295 [INFO] c2.agent: Host:     WORKSTATION-01
+2026-03-23 12:31:47,295 [INFO] c2.agent: User:     john.smith
+2026-03-23 12:31:47,295 [INFO] c2.agent: OS:       Windows 11
+2026-03-23 12:31:47,295 [INFO] c2.agent: Encrypted: False
+2026-03-23 12:31:47,500 [INFO] c2.agent: Agent ID: 87af0521-9a60-4a1a-a80e-dd481f85596c
+2026-03-23 12:31:47,501 [INFO] c2.agent: Server:   http://127.0.0.1:8000
+2026-03-23 12:31:47,501 [INFO] c2.agent: Host:     FINANCE-06
+2026-03-23 12:31:47,501 [INFO] c2.agent: User:     jessica.fin
+2026-03-23 12:31:47,501 [INFO] c2.agent: OS:       Windows 11
+2026-03-23 12:31:47,501 [INFO] c2.agent: Encrypted: False
+2026-03-23 12:31:48,128 [INFO] c2.agent: Agent ID: 205438bb-ffdc-4527-b493-404263bdeb78
+2026-03-23 12:31:48,129 [INFO] c2.agent: Server:   http://127.0.0.1:8000
+2026-03-23 12:31:48,129 [INFO] c2.agent: Host:     DBSERVER-07
+2026-03-23 12:31:48,129 [INFO] c2.agent: User:     admin
+2026-03-23 12:31:48,129 [INFO] c2.agent: OS:       Debian 12
+2026-03-23 12:31:48,129 [INFO] c2.agent: Encrypted: False
+2026-03-23 12:31:48,613 [INFO] c2.agent: Agent ID: 44567ec2-cd83-4914-8cc4-ac5c5606149f
+2026-03-23 12:31:48,613 [INFO] c2.agent: Server:   http://127.0.0.1:8000
+2026-03-23 12:31:48,614 [INFO] c2.agent: Host:     HR-PC-08
+2026-03-23 12:31:48,614 [INFO] c2.agent: User:     priya.hr
+2026-03-23 12:31:48,614 [INFO] c2.agent: OS:       Windows 10
+2026-03-23 12:31:48,614 [INFO] c2.agent: Encrypted: False
+2026-03-23 12:31:49,268 [ERROR] c2.agent: Registration failed: HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /register (Caused by NewConnectionError("HTTPConnection(host='127.0.0.1', port=8000): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-03-23 12:31:49,268 [INFO] c2.agent: Retrying in 5s...
+2026-03-23 12:31:49,292 [ERROR] c2.agent: Registration failed: HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /register (Caused by NewConnectionError("HTTPConnection(host='127.0.0.1', port=8000): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-03-23 12:31:49,293 [INFO] c2.agent: Retrying in 5s...
+2026-03-23 12:31:49,302 [INFO] c2.agent: Agent ID: 32cca1b5-e4ba-4dad-8eca-4a0179bcbfee
+2026-03-23 12:31:49,302 [INFO] c2.agent: Server:   http://127.0.0.1:8000
+2026-03-23 12:31:49,303 [INFO] c2.agent: Host:     WEBSERVER-09
+2026-03-23 12:31:49,303 [INFO] c2.agent: User:     www-data
+2026-03-23 12:31:49,303 [INFO] c2.agent: OS:       Ubuntu 22.04
+2026-03-23 12:31:49,303 [INFO] c2.agent: Encrypted: False
+2026-03-23 12:31:49,372 [ERROR] c2.agent: Registration failed: HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /register (Caused by NewConnectionError("HTTPConnection(host='127.0.0.1', port=8000): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-03-23 12:31:49,373 [INFO] c2.agent: Retrying in 5s...
+2026-03-23 12:31:49,536 [ERROR] c2.agent: Registration failed: HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /register (Caused by NewConnectionError("HTTPConnection(host='127.0.0.1', port=8000): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-03-23 12:31:49,537 [INFO] c2.agent: Retrying in 5s...
+2026-03-23 12:31:49,975 [INFO] c2.agent: Agent ID: 9099998e-3464-4cb2-a95e-91d87859d230
+2026-03-23 12:31:49,975 [INFO] c2.agent: Server:   http://127.0.0.1:8000
+2026-03-23 12:31:49,975 [INFO] c2.agent: Host:     TESTBOX-10
+2026-03-23 12:31:49,975 [INFO] c2.agent: User:     qa.test
+2026-03-23 12:31:49,976 [INFO] c2.agent: OS:       Kali Linux
+2026-03-23 12:31:49,976 [INFO] c2.agent: Encrypted: False
+2026-03-23 12:31:50,173 [ERROR] c2.agent: Registration failed: HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /register (Caused by NewConnectionError("HTTPConnection(host='127.0.0.1', port=8000): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-03-23 12:31:50,173 [INFO] c2.agent: Retrying in 5s...
+2026-03-23 12:31:50,488 [INFO] c2.agent: Registered: {'message': 'agent registered'}
+2026-03-23 12:31:50,500 [INFO] c2.agent: Heartbeat started (every 10s)
+2026-03-23 12:31:50,500 [INFO] c2.agent: Command polling started (every 5s)
+2026-03-23 12:31:50,500 [INFO] c2.agent: Agent ready. Waiting for commands...
+
+2026-03-23 12:31:50,535 [INFO] c2.agent: Registered: {'message': 'agent registered'}
+2026-03-23 12:31:50,540 [INFO] c2.agent: Heartbeat started (every 10s)
+2026-03-23 12:31:50,540 [INFO] c2.agent: Command polling started (every 5s)
+2026-03-23 12:31:50,541 [INFO] c2.agent: Agent ready. Waiting for commands...
+
+2026-03-23 12:31:50,758 [INFO] c2.agent: Registered: {'message': 'agent registered'}
+2026-03-23 12:31:50,768 [INFO] c2.agent: Heartbeat started (every 10s)
+2026-03-23 12:31:50,769 [INFO] c2.agent: Command polling started (every 5s)
+2026-03-23 12:31:50,770 [INFO] c2.agent: Agent ready. Waiting for commands...
+
+2026-03-23 12:31:54,321 [INFO] c2.agent: Registered: {'message': 'agent registered'}
+2026-03-23 12:31:54,324 [INFO] c2.agent: Heartbeat started (every 10s)
+2026-03-23 12:31:54,325 [INFO] c2.agent: Command polling started (every 5s)
+2026-03-23 12:31:54,327 [INFO] c2.agent: Agent ready. Waiting for commands...
+
+2026-03-23 12:31:54,357 [INFO] c2.agent: Registered: {'message': 'agent registered'}
+2026-03-23 12:31:54,359 [INFO] c2.agent: Heartbeat started (every 10s)
+2026-03-23 12:31:54,360 [INFO] c2.agent: Command polling started (every 5s)
+2026-03-23 12:31:54,362 [INFO] c2.agent: Agent ready. Waiting for commands...
+
+2026-03-23 12:31:54,438 [INFO] c2.agent: Registered: {'message': 'agent registered'}
+2026-03-23 12:31:54,456 [INFO] c2.agent: Heartbeat started (every 10s)
+2026-03-23 12:31:54,456 [INFO] c2.agent: Command polling started (every 5s)
+2026-03-23 12:31:54,457 [INFO] c2.agent: Agent ready. Waiting for commands...
+
+2026-03-23 12:31:54,564 [INFO] c2.agent: Registered: {'message': 'agent registered'}
+2026-03-23 12:31:54,574 [INFO] c2.agent: Heartbeat started (every 10s)
+2026-03-23 12:31:54,575 [INFO] c2.agent: Command polling started (every 5s)
+2026-03-23 12:31:54,576 [INFO] c2.agent: Agent ready. Waiting for commands...
+
+2026-03-23 12:31:54,625 [INFO] c2.agent: Registered: {'message': 'agent registered'}
+2026-03-23 12:31:54,670 [INFO] c2.agent: Heartbeat started (every 10s)
+2026-03-23 12:31:54,671 [INFO] c2.agent: Command polling started (every 5s)
+2026-03-23 12:31:54,672 [INFO] c2.agent: Agent ready. Waiting for commands...
+
+2026-03-23 12:31:55,093 [INFO] c2.agent: Registered: {'message': 'agent registered'}
+2026-03-23 12:31:55,116 [INFO] c2.agent: Heartbeat started (every 10s)
+2026-03-23 12:31:55,117 [INFO] c2.agent: Command polling started (every 5s)
+2026-03-23 12:31:55,121 [INFO] c2.agent: Agent ready. Waiting for commands...
+
+2026-03-23 12:31:55,944 [INFO] c2.agent: Registered: {'message': 'agent registered'}
+2026-03-23 12:31:55,950 [INFO] c2.agent: Heartbeat started (every 10s)
+2026-03-23 12:31:55,951 [INFO] c2.agent: Command polling started (every 5s)
+2026-03-23 12:31:55,951 [INFO] c2.agent: Agent ready. Waiting for commands...
+
+2026-03-23 12:33:57,097 [INFO] c2.agent: Command received: ls
+2026-03-23 12:33:57,130 [INFO] c2.agent: Output: [DIR]  .git
+[DIR]  .gitignore
+[FILE] README.md  (6995 bytes)
+[DIR]  agent
+[DIR]  communication
+[DIR]  dashboard
+[DIR]  data
+[DIR]  docs
+[DIR]  encryption
+[DIR]  logs
+[DIR]  scripts
+[DIR]  server
+[DIR]
+2026-03-23 12:34:31,586 [INFO] c2.agent: Command received: cd..
+2026-03-23 12:34:32,024 [INFO] c2.agent: Output: (no output)
+2026-03-23 12:34:45,169 [INFO] c2.agent: Command received: pwd
+2026-03-23 12:34:45,170 [INFO] c2.agent: Output: C:\Users\Ramashish Gupta\OneDrive\Documents\GitHub\c2-framework-project
+2026-03-23 12:41:29,115 [ERROR] c2.agent: Poll error: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+2026-03-23 12:41:29,234 [ERROR] c2.agent: Poll error: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+2026-03-23 12:41:31,921 [ERROR] c2.agent: Poll error: HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /get_command/205438bb-ffdc-4527-b493-404263bdeb78 (Caused by NewConnectionError("HTTPConnection(host='127.0.0.1', port=8000): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-03-23 12:41:32,016 [ERROR] c2.agent: Poll error: HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /get_command/9451693b-6ed2-4edf-af76-a5450f7d7d3d (Caused by NewConnectionError("HTTPConnection(host='127.0.0.1', port=8000): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-03-23 12:41:32,517 [ERROR] c2.agent: Poll error: HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /get_command/ca4a8669-fb55-44d6-b84c-158c794ed950 (Caused by NewConnectionError("HTTPConnection(host='127.0.0.1', port=8000): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-03-23 12:41:32,937 [WARNING] c2.agent: Agent interrupted by user.
+2026-03-23 12:41:32,937 [WARNING] c2.agent: Agent interrupted by user.
+2026-03-23 12:41:32,937 [WARNING] c2.agent: Agent interrupted by user.
+2026-03-23 12:41:33,064 [WARNING] c2.agent: Agent interrupted by user.
+2026-03-23 12:41:33,209 [WARNING] c2.agent: Agent interrupted by user.

